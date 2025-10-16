@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using TodoListApi.Models;
+using TodoListApi.Core.Models;
 
-namespace TodoListApi.Data;
+namespace TodoListApi.Core.Data;
 
 public class AppDbContext : DbContext
 {

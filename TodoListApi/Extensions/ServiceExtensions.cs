@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using TodoListApi.Data;
+using TodoListApi.Core.Data;
+using TodoListApi.Features.Auth;
+using TodoListApi.Features.Task;
 
 namespace TodoListApi.Extensions
 {
@@ -100,6 +102,13 @@ namespace TodoListApi.Extensions
                     }
                 });
             });
+            return services;
+        }
+
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+        {
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ITaskService, TaskService>();
             return services;
         }
     }

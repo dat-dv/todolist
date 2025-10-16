@@ -1,4 +1,4 @@
-namespace TodoListApi.Models
+namespace TodoListApi.Core.Models
 {
     public abstract class BaseEntity
     {

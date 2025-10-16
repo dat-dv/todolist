@@ -19,6 +19,7 @@ builder.Services.AddRouting(options =>
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddCorsConfiguration();
+builder.Services.AddApplicationServices();
 builder.Services.AddSwaggerConfiguration();
 
 var app = builder.Build();

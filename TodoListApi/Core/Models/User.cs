@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TodoListApi.Models;
+namespace TodoListApi.Core.Models;
 
 public class User : BaseEntity
 {
