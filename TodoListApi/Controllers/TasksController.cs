@@ -113,7 +113,7 @@ public class TasksController : ControllerBase
 
             var userId = GetUserId();
 
-            var task = new TodoTask
+            var task = new TaskItem
             {
                 Title = dto.Title,
                 Description = dto.Description,

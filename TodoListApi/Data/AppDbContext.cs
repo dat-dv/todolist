@@ -11,14 +11,14 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<User> Users => Set<User>();
-    public DbSet<TodoTask> Tasks => Set<TodoTask>();
+    public DbSet<TaskItem> Tasks => Set<TaskItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         // Configure User-Task relationship
-        modelBuilder.Entity<TodoTask>()
+        modelBuilder.Entity<TaskItem>()
             .HasOne(t => t.User)
             .WithMany(u => u.Tasks)
             .HasForeignKey(t => t.UserId)
@@ -29,7 +29,7 @@ public class AppDbContext : DbContext
             .HasIndex(u => u.Username)
             .IsUnique();
 
-        modelBuilder.Entity<TodoTask>()
+        modelBuilder.Entity<TaskItem>()
             .HasIndex(t => t.UserId);
     }
 }

@@ -2,10 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TodoListApi.Models;
 
-public class User
+public class User : BaseEntity
 {
-    public int Id { get; set; }
-
     [Required]
     [StringLength(50, MinimumLength = 3)]
     public string Username { get; set; } = string.Empty;
@@ -13,8 +11,6 @@ public class User
     [Required]
     public string PasswordHash { get; set; } = string.Empty;
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
     // Navigation property
-    public ICollection<TodoTask> Tasks { get; set; } = new List<TodoTask>();
+    public ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
 }
