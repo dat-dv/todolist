@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoListApi.Core.Data;
+using TodoListApi.Core.DTOs;
 using TodoListApi.Core.Models;
 using TodoListApi.Features.Task;
 using TodoListApi.Features.Task.DTOs;
@@ -16,17 +17,16 @@ public class TaskService : ITaskService
         _context = context;
     }
 
-    public async Task<IEnumerable<TaskResponseDto>> GetTasksAsync(int userId, bool? completed = null)
+    public async Task<PagedResultDto<TaskResponseDto>> GetTasksAsync(int userId, int page = 1, int pageSize = 10)
     {
         var query = _context.Tasks.Where(t => t.UserId == userId);
 
-        if (completed.HasValue)
-        {
-            query = query.Where(t => t.IsCompleted == completed.Value);
-        }
+        var totalCount = await query.CountAsync();
 
-        return await query
+        var items = await query
             .OrderByDescending(t => t.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .Select(t => new TaskResponseDto
             {
                 Id = t.Id,
@@ -37,6 +37,14 @@ public class TaskService : ITaskService
                 CompletedAt = t.CompletedAt
             })
             .ToListAsync();
+
+        return new PagedResultDto<TaskResponseDto>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            Page = page,
+            PageSize = pageSize
+        };
     }
 
     public async Task<TaskResponseDto> GetTaskByIdAsync(int taskId, int userId)

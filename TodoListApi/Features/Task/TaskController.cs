@@ -27,11 +27,11 @@ public class TaskController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetTasks([FromQuery] bool? completed)
+    public async Task<IActionResult> GetTasks([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
         var userId = GetUserId();
-        var tasks = await _taskService.GetTasksAsync(userId, completed);
-        return Ok(tasks);
+        var result = await _taskService.GetTasksAsync(userId, page, pageSize);
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
