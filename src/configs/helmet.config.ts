@@ -1,7 +1,7 @@
 export const CONFIG_HELMET = {
-  login: {
-    title: "Login - Todo List App",
-    meta: [
+  LOGIN: {
+    TITLE: "Login - Todo List App",
+    META: [
       {
         name: "description",
         content:
@@ -13,9 +13,9 @@ export const CONFIG_HELMET = {
       },
     ],
   },
-  register: {
-    title: "Register - Todo List App",
-    meta: [
+  REGISTER: {
+    TITLE: "Register - Todo List App",
+    META: [
       {
         name: "description",
         content:
@@ -27,9 +27,9 @@ export const CONFIG_HELMET = {
       },
     ],
   },
-  todoList: {
-    title: "My Tasks - Todo List App",
-    meta: [
+  HOME: {
+    TITLE: "My Tasks - Todo List App",
+    META: [
       {
         name: "description",
         content: "Organize, track, and complete your daily tasks with ease.",
@@ -40,9 +40,9 @@ export const CONFIG_HELMET = {
       },
     ],
   },
-  notFound: {
-    title: "404 - Page Not Found",
-    meta: [
+  NOT_FOUND: {
+    TITLE: "404 - Page Not Found",
+    META: [
       {
         name: "description",
         content: "The page you are looking for does not exist.",
@@ -50,4 +50,4 @@ export const CONFIG_HELMET = {
       { name: "keywords", content: "404, page not found, error" },
     ],
   },
-};
+} as const;

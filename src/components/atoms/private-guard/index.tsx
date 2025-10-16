@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
-
 import { LoadingScreen } from "../loading-screen";
-import { getAccessToken } from "../../../utils/local-storage";
 import { PATHS } from "../../../configs/path.config";
 import { useRouter } from "../../../hooks/use-router";
+import useAuth from "../../../hooks/use-auth";
+import { useEffect } from "react";
 
 type TPrivateGuardProps = {
   children: React.ReactNode;
@@ -11,18 +10,16 @@ type TPrivateGuardProps = {
 
 export function PrivateGuard({ children }: TPrivateGuardProps) {
   const router = useRouter();
-  const [isChecking, setIsChecking] = useState<boolean>(true);
+
+  const { isLoading, isLoggedIn } = useAuth();
 
   useEffect(() => {
-    const token = getAccessToken();
-    if (!token) {
+    if (!isLoggedIn && !isLoading) {
       router.replace(PATHS.LOGIN);
-      return;
     }
-    setIsChecking(false);
-  }, [router]);
+  }, [router, isLoggedIn, isLoading]);
 
-  if (isChecking) {
+  if (isLoading) {
     return <LoadingScreen />;
   }
 
