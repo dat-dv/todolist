@@ -1,0 +1,57 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using System.Net;
+
+namespace TodoListApi.Filters
+{
+    public class GlobalExceptionFilter : IExceptionFilter
+    {
+        private readonly ILogger<GlobalExceptionFilter> _logger;
+        private readonly IWebHostEnvironment _env;
+
+        public GlobalExceptionFilter(ILogger<GlobalExceptionFilter> logger, IWebHostEnvironment env)
+        {
+            _logger = logger;
+            _env = env;
+        }
+
+        public void OnException(ExceptionContext context)
+        {
+            _logger.LogError(context.Exception, "Unhandled exception occurred");
+
+            var statusCode = context.Exception switch
+            {
+                UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,
+                KeyNotFoundException => (int)HttpStatusCode.NotFound,
+                ArgumentException => (int)HttpStatusCode.BadRequest,
+                _ => (int)HttpStatusCode.InternalServerError
+            };
+
+            var response = new
+            {
+                error = GetErrorMessage(context.Exception),
+                message = context.Exception.Message,
+                statusCode = statusCode,
+                stackTrace = _env.IsDevelopment() ? context.Exception.StackTrace : null
+            };
+
+            context.Result = new ObjectResult(response)
+            {
+                StatusCode = statusCode
+            };
+
+            context.ExceptionHandled = true;
+        }
+
+        private string GetErrorMessage(Exception exception)
+        {
+            return exception switch
+            {
+                UnauthorizedAccessException => "Unauthorized",
+                KeyNotFoundException => "Not Found",
+                ArgumentException => "Bad Request",
+                _ => "Internal Server Error"
+            };
+        }
+    }
+}
