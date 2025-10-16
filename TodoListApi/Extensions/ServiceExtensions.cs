@@ -118,5 +118,32 @@ namespace TodoListApi.Extensions
             services.AddScoped<ITaskService, TaskService>();
             return services;
         }
+
+
+        public static void AutoMigration(this IApplicationBuilder app, IConfiguration configuration)
+        {
+            var autoMigrate = configuration.GetValue<bool>("AUTO_MIGRATE", false);
+
+            if (autoMigrate)
+            {
+                using (var scope = app.ApplicationServices.CreateScope())
+                {
+                    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<AppDbContext>>();
+
+                    try
+                    {
+                        logger.LogInformation("Running database migrations...");
+                        dbContext.Database.Migrate();
+                        logger.LogInformation("Database migrations completed successfully.");
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex, "Error running migrations");
+                        throw;
+                    }
+                }
+            }
+        }
     }
 }

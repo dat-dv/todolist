@@ -1,7 +1,9 @@
 
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TodoListApi.Common.Filters;
+using TodoListApi.Core.Data;
 using TodoListApi.Extensions;
 using TodoListApi.Filters;
 
@@ -34,6 +36,7 @@ builder.Services.AddCorsConfiguration();
 builder.Services.AddApplicationServices();
 builder.Services.AddSwaggerConfiguration();
 var app = builder.Build();
+app.AutoMigration(builder.Configuration);
 
 // Configure pipeline
 app.ConfigurePipeline();
