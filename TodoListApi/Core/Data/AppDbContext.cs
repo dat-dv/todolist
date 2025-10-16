@@ -17,14 +17,12 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Configure User-Task relationship
         modelBuilder.Entity<TaskItem>()
             .HasOne(t => t.User)
             .WithMany(u => u.Tasks)
             .HasForeignKey(t => t.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Create indexes for performance
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Username)
             .IsUnique();

@@ -4,6 +4,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>TodoListApi</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,4 +21,7 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EFMigrations Include="Core\Data\Migrations\**\*.cs" />
+  </ItemGroup>
 </Project>

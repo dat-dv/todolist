@@ -15,7 +15,8 @@ namespace TodoListApi.Extensions
             services.AddDbContext<AppDbContext>(options =>
                 options.UseMySql(
                     connectionString,
-                    ServerVersion.AutoDetect(connectionString)
+                    ServerVersion.AutoDetect(connectionString),
+                    mySqlOptions => mySqlOptions.MigrationsHistoryTable("__EFMigrationsHistory")
                 )
             );
             return services;
