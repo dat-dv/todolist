@@ -20,7 +20,8 @@ public class AuthService : IAuthService
         _configuration = configuration;
     }
 
-    public async Task<string> RegisterAsync(RegisterDto registerDto)
+
+    public async Task<AuthResponseDto> RegisterAsync(RegisterDto registerDto)
     {
         if (await _context.Users.AnyAsync(u => u.Username == registerDto.Username))
         {
@@ -37,10 +38,22 @@ public class AuthService : IAuthService
         await _context.SaveChangesAsync();
 
         var expiresAt = DateTime.UtcNow.AddHours(3);
-        return GenerateJwtToken(user, expiresAt);
+        var token = GenerateJwtToken(user, expiresAt);
+
+        return new AuthResponseDto
+        {
+            Token = token,
+            ExpiresAt = expiresAt,
+            User = new UserInfoDto
+            {
+                Id = user.Id,
+                Username = user.Username,
+                CreatedAt = user.CreatedAt
+            }
+        };
     }
 
-    public async Task<string> LoginAsync(LoginDto loginDto)
+    public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
     {
         var user = await _context.Users
             .FirstOrDefaultAsync(u => u.Username == loginDto.Username);
@@ -50,8 +63,23 @@ public class AuthService : IAuthService
             throw new UnauthorizedAccessException("Invalid credentials");
         }
 
-        var expiresAt = DateTime.UtcNow.AddHours(3);
-        return GenerateJwtToken(user, expiresAt);
+        var expirationHours = _configuration.GetValue<int>("Jwt:ExpirationHours", 24);
+
+        var expiresAt = DateTime.UtcNow.AddHours(expirationHours);
+
+        var token = GenerateJwtToken(user, expiresAt);
+
+        return new AuthResponseDto
+        {
+            Token = token,
+            ExpiresAt = expiresAt,
+            User = new UserInfoDto
+            {
+                Id = user.Id,
+                Username = user.Username,
+                CreatedAt = user.CreatedAt
+            }
+        };
     }
 
     private string GenerateJwtToken(User user, DateTime expiresAt)

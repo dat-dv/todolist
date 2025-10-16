@@ -4,6 +4,6 @@ namespace TodoListApi.Features.Auth;
 
 public interface IAuthService
 {
-    Task<string> RegisterAsync(RegisterDto registerDto);
-    Task<string> LoginAsync(LoginDto loginDto);
+    Task<AuthResponseDto> RegisterAsync(RegisterDto registerDto);
+    Task<AuthResponseDto> LoginAsync(LoginDto loginDto);
 }

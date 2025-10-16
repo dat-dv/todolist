@@ -1,8 +1,10 @@
+using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using TodoListApi.Core.Data;
 using TodoListApi.Features.Auth;
 using TodoListApi.Features.Task;
@@ -51,7 +53,6 @@ namespace TodoListApi.Extensions
             services.AddAuthorization();
             return services;
         }
-
         public static IServiceCollection AddCorsConfiguration(this IServiceCollection services)
         {
             services.AddCors(options =>
@@ -78,6 +79,9 @@ namespace TodoListApi.Extensions
                     Description = "A simple TodoList API with JWT Authentication"
                 });
 
+                c.EnableAnnotations();
+                c.ExampleFilters();
+
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token",
@@ -102,6 +106,9 @@ namespace TodoListApi.Extensions
                     }
                 });
             });
+
+            services.AddSwaggerExamplesFromAssemblies(Assembly.GetEntryAssembly());
+
             return services;
         }
 
