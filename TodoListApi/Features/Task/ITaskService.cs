@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using TodoListApi.Common.DTOs;
 using TodoListApi.Features.Task.DTOs;
 

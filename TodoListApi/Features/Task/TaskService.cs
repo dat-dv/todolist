@@ -1,12 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoListApi.Common.DTOs;
-using TodoListApi.Common.Helpers;
 using TodoListApi.Core.Data;
-using TodoListApi.Core.Models;
-using TodoListApi.Features.Task;
 using TodoListApi.Features.Task.DTOs;
-
+using TaskModel = TodoListApi.Core.Models.Task;
 namespace TodoListApi.Features.Task;
 
 public class TaskService : ITaskService
@@ -32,7 +28,6 @@ public class TaskService : ITaskService
             {
                 Id = t.Id,
                 Title = t.Title,
-                Description = t.Description,
                 IsCompleted = t.IsCompleted,
                 CreatedAt = t.CreatedAt,
                 CompletedAt = t.CompletedAt,
@@ -56,7 +51,6 @@ public class TaskService : ITaskService
             {
                 Id = t.Id,
                 Title = t.Title,
-                Description = t.Description,
                 IsCompleted = t.IsCompleted,
                 CreatedAt = t.CreatedAt,
                 CompletedAt = t.CompletedAt
@@ -73,10 +67,9 @@ public class TaskService : ITaskService
 
     public async Task<TaskResponseDto> CreateTaskAsync(CreateTaskDto createTaskDto, int userId)
     {
-        var task = new TaskItem
+        var task = new TaskModel
         {
             Title = createTaskDto.Title,
-            Description = createTaskDto.Description,
             UserId = userId,
             IsCompleted = false
         };
@@ -88,7 +81,6 @@ public class TaskService : ITaskService
         {
             Id = task.Id,
             Title = task.Title,
-            Description = task.Description,
             IsCompleted = task.IsCompleted,
             CreatedAt = task.CreatedAt,
             CompletedAt = task.CompletedAt
@@ -106,7 +98,6 @@ public class TaskService : ITaskService
         }
 
         task.Title = updateTaskDto.Title ?? task.Title;
-        task.Description = updateTaskDto.Description;
 
         await _context.SaveChangesAsync();
 
@@ -114,7 +105,6 @@ public class TaskService : ITaskService
         {
             Id = task.Id,
             Title = task.Title,
-            Description = task.Description,
             IsCompleted = task.IsCompleted,
             CreatedAt = task.CreatedAt,
             CompletedAt = task.CompletedAt

@@ -3,14 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TodoListApi.Core.Models
 {
-    public class TaskItem : BaseEntity
+    public class Task : BaseEntity
     {
         [Required]
-        [StringLength(200, MinimumLength = 1)]
+        [StringLength(100, MinimumLength = 1)]
         public string Title { get; set; } = string.Empty;
-
-        [StringLength(1000)]
-        public string? Description { get; set; }
 
         public bool IsCompleted { get; set; } = false;
 

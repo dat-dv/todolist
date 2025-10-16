@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using TaskModel = TodoListApi.Core.Models.Task;
 
 namespace TodoListApi.Core.Models;
 
@@ -12,5 +13,5 @@ public class User : BaseEntity
     public string PasswordHash { get; set; } = string.Empty;
 
     // Navigation property
-    public ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
+    public ICollection<TaskModel> Tasks { get; set; } = new List<TaskModel>();
 }
