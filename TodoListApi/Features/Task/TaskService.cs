@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TodoListApi.Common.DTOs;
+using TodoListApi.Common.Helpers;
 using TodoListApi.Core.Data;
-using TodoListApi.Core.DTOs;
 using TodoListApi.Core.Models;
 using TodoListApi.Features.Task;
 using TodoListApi.Features.Task.DTOs;
@@ -19,7 +20,7 @@ public class TaskService : ITaskService
 
     public async Task<PagedResultDto<TaskResponseDto>> GetTasksAsync(int userId, int page = 1, int pageSize = 10)
     {
-        var query = _context.Tasks.Where(t => t.UserId == userId);
+        var query = _context.Tasks.Where(t => t.UserId == userId && t.DeletedAt == null);
 
         var totalCount = await query.CountAsync();
 
@@ -34,23 +35,23 @@ public class TaskService : ITaskService
                 Description = t.Description,
                 IsCompleted = t.IsCompleted,
                 CreatedAt = t.CreatedAt,
-                CompletedAt = t.CompletedAt
+                CompletedAt = t.CompletedAt,
             })
             .ToListAsync();
 
         return new PagedResultDto<TaskResponseDto>
         {
-            Items = items,
-            TotalCount = totalCount,
+            Value = items,
+            Count = totalCount,
             Page = page,
-            PageSize = pageSize
+            PageSize = pageSize,
         };
     }
 
     public async Task<TaskResponseDto> GetTaskByIdAsync(int taskId, int userId)
     {
         var task = await _context.Tasks
-            .Where(t => t.Id == taskId && t.UserId == userId)
+            .Where(t => t.Id == taskId && t.UserId == userId && t.DeletedAt == null)
             .Select(t => new TaskResponseDto
             {
                 Id = t.Id,
@@ -120,24 +121,24 @@ public class TaskService : ITaskService
         };
     }
 
-    public async Task<IActionResult> DeleteTaskAsync(int taskId, int userId)
+    public async Task<DeleteResponseDto> DeleteTaskAsync(int taskId, int userId)
     {
         var task = await _context.Tasks
-            .FirstOrDefaultAsync(t => t.Id == taskId && t.UserId == userId);
+            .FirstOrDefaultAsync(t => t.Id == taskId && t.UserId == userId && t.DeletedAt == null);
 
         if (task == null)
         {
-            return new NotFoundObjectResult("Task not found");
+            throw new KeyNotFoundException("Task not found");
         }
 
-        _context.Tasks.Remove(task);
+        task.DeletedAt = DateTime.UtcNow;
+
         await _context.SaveChangesAsync();
 
-        return new OkResult();
-    }
-
-    Task<IActionResult> ITaskService.DeleteTaskAsync(int taskId, int userId)
-    {
-        throw new NotImplementedException();
+        return new DeleteResponseDto
+        {
+            Id = task.Id,
+            DeletedAt = task.DeletedAt.Value
+        };
     }
 }

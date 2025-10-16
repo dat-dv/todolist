@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TodoListApi.Common.DTOs;
 using TodoListApi.Features.Task.DTOs;
 
 namespace TodoListApi.Features.Task;
@@ -27,7 +28,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetTasks([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<ActionResult<TaskResponseDto>> GetTasks([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
         var userId = GetUserId();
         var result = await _taskService.GetTasksAsync(userId, page, pageSize);
@@ -35,7 +36,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetTask(int id)
+    public async Task<ActionResult<TaskResponseDto>> GetTask(int id)
     {
         var userId = GetUserId();
         var task = await _taskService.GetTaskByIdAsync(id, userId);
@@ -43,7 +44,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateTask([FromBody] CreateTaskDto createTaskDto)
+    public async Task<ActionResult<TaskResponseDto>> CreateTask([FromBody] CreateTaskDto createTaskDto)
     {
         var userId = GetUserId();
         var task = await _taskService.CreateTaskAsync(createTaskDto, userId);
@@ -51,7 +52,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateTask(int id, [FromBody] UpdateTaskDto updateTaskDto)
+    public async Task<ActionResult<TaskResponseDto>> UpdateTask(int id, [FromBody] UpdateTaskDto updateTaskDto)
     {
         var userId = GetUserId();
         var task = await _taskService.UpdateTaskAsync(id, updateTaskDto, userId);
@@ -59,10 +60,10 @@ public class TaskController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteTask(int id)
+    public async Task<ActionResult<DeleteResponseDto>> DeleteTodoItem(int id)
     {
         var userId = GetUserId();
-        await _taskService.DeleteTaskAsync(id, userId);
-        return NoContent();
+        var result = await _taskService.DeleteTaskAsync(id, userId);
+        return Ok(result);
     }
 }
