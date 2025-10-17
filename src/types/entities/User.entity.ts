@@ -14,3 +14,7 @@ export type TUserLoginRes = {
   token: string;
   user: TUser;
 };
+
+export type TRegisterReq = TUserLoginReq;
+
+export type TRegisterRes = TUserLoginRes;
