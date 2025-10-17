@@ -2,18 +2,20 @@ import type { TCustomInputProps } from "./custom-input.type";
 import { forwardRef, useState } from "react";
 
 const CustomInput = forwardRef<HTMLInputElement, TCustomInputProps>(
-  ({ label, id, error, className = "", type = "text", ...rest }, ref) => {
+  ({ label = "", id, error, className = "", type = "text", ...rest }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
     const isPassword = type === "password";
 
     return (
       <div className="flex flex-col space-y-1 w-full max-w-md">
-        <label
-          htmlFor={id}
-          className={`font-medium ${error ? "text-red-500" : "text-black"}`}
-        >
-          {label}
-        </label>
+        {!!label && (
+          <label
+            htmlFor={id}
+            className={`font-medium ${error ? "text-red-500" : "text-black"}`}
+          >
+            {label}
+          </label>
+        )}
         <div className="relative">
           <input
             ref={ref}
