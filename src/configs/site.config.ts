@@ -1,3 +1,3 @@
 export const SITE_CONFIG = {
-  BACKEND_URL: "http://localhost:5226",
+  BACKEND_URL: "http://localhost:5266/api",
 };

@@ -1,4 +1,10 @@
-import type { TUser } from "../../types/entities/User.entity";
+import type {
+  TUserLoginReq,
+  TUserLoginRes,
+} from "../../types/entities/User.entity";
 import REQUEST from "../../utils/request";
 
-export const useGetMyProfile = REQUEST.get<TUser>("/api/v1/login");
+export const useTriggerLogin = REQUEST.trigger<TUserLoginRes, TUserLoginReq>(
+  "/auth/login",
+  "POST"
+);

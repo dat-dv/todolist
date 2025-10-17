@@ -4,4 +4,5 @@ export type AuthContextType = {
   user?: Partial<TUser>;
   isLoggedIn: boolean;
   isLoading: boolean;
+  setUser?: (user: TUser) => void;
 };

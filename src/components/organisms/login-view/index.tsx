@@ -5,7 +5,7 @@ import { useTriggerLogin } from "../../../hooks/user/use-trigger-login";
 import { setSession } from "../../../utils/local-storage";
 import useAuth from "../../../hooks/use-auth";
 
-const HomepageView = () => {
+const LoginView = () => {
   const router = useRouter();
   const { setUser } = useAuth();
   const { trigger: triggerLogin } = useTriggerLogin({ shouldFetch: true });
@@ -27,8 +27,7 @@ const HomepageView = () => {
 
   return (
     <div>
-      This is home page
-      <br />
+      LOGIN PAGEE <br />
       <a href="/login">Go to login page</a>
       <input type="text" placeholder="Username" />
       <input type="password" placeholder="Password" />
@@ -39,4 +38,4 @@ const HomepageView = () => {
   );
 };
 
-export default HomepageView;
+export default LoginView;

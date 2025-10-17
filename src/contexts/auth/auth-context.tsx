@@ -6,4 +6,5 @@ export const AuthContext = createContext<AuthContextType>({
   user: {},
   isLoggedIn: false,
   isLoading: true,
+  setUser: undefined,
 });

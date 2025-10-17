@@ -1,4 +1,4 @@
-import type { TErrorResponse, TTransformResponse } from "./entities/base";
+import type { TErrorResponse, TTransformResponse } from "./base.type";
 
 export type TTransformData<T> = {
   data: T[];

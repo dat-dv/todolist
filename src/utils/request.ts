@@ -1,37 +1,28 @@
 import type { SWRConfiguration } from "swr";
-import type { TFilterField, TFilterCondition } from "src/utils/query-builder";
-import type { TAxiosMethod, TBaseFetcherOptions } from "src/types/axios.types";
-import type {
-  TTransformResponse,
-  TTransformPagination,
-} from "src/types/entities/base";
 
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
-
-import QueryBuilder from "src/utils/query-builder";
 import {
-  getFetcher,
-  putFetcher,
-  postFetcher,
-  patchFetcher,
   deleteFetcher,
-  getBlobFetcher,
+  getFetcher,
   getTriggerFetcher,
-} from "src/utils/axios";
+  patchFetcher,
+  postFetcher,
+  putFetcher,
+} from "./fetcher";
+import type { TAxiosMethod, TBaseFetcherOptions } from "../types/axios.type";
+import type {
+  TTransformPagination,
+  TTransformResponse,
+} from "../types/base.type";
 
-import { usePermissionAPI } from "../common/use-check-permission";
-
-type TSWRWithPermissionParams<T extends string = TFilterField<string>> = {
+type TSWRWithPermissionParams = {
   shouldFetch?: boolean;
-  params?: Record<string, any>;
-  filterConditions?: TFilterCondition<T>[];
+  params?: Record<string, unknown>;
   config?: SWRConfiguration;
 };
 
 class REQUEST {
-  private static usePermissionAPI = usePermissionAPI;
-
   private static useSWR = useSWR;
 
   private static useSWRMutation = useSWRMutation;
@@ -44,138 +35,66 @@ class REQUEST {
     GET: getTriggerFetcher,
   };
 
-  private static useSWRWithPermission<
-    T,
-    TFilter extends string = string,
-    D = any
-  >({
-    baseUrl,
-    params,
+  private static useSWRWithPermission<T, D = unknown>({
+    url,
     config = {},
-    filterConditions = [],
   }: {
-    baseUrl?: string | null;
-    params: Record<string, any>;
+    url?: string | null;
+    params: Record<string, unknown>;
     config?: SWRConfiguration;
-    filterConditions?: TFilterCondition<TFilter>[];
   }) {
-    // const allowPermission = this.usePermissionAPI({
-    //   path: baseUrl,
-    //   method: 'GET',
-    // });
-    const allowPermission = true;
-    const allowFetch = allowPermission && !!baseUrl;
-    const url = allowFetch
-      ? QueryBuilder.buildQuery({ params, filterConditions, baseUrl })
-      : null;
-
+    const allowFetch = !!url;
     return this.useSWR(allowFetch ? url : null, getFetcher<T, D>, config);
   }
 
   private static useSWRMutationWithPermission<
     T,
-    TFilter extends string = string,
-    D = TBaseFetcherOptions<any>
+    D = TBaseFetcherOptions<unknown>
   >({
-    baseUrl,
-    params,
+    url,
     method,
-    filterConditions = [],
   }: {
-    baseUrl?: string | null;
-    params: Record<string, any>;
+    url?: string | null;
+    params: Record<string, unknown>;
     method: TAxiosMethod;
-    filterConditions: TFilterCondition<TFilter>[];
   }) {
     const fetcher = this.MUTATION_FETCHER[method];
-    const allowFetch = true;
-    // TODO: Uncomment
-    // this.usePermissionAPI({
-    //   path: baseUrl,
-    //   method,
-    // });
-    const url =
-      allowFetch && baseUrl
-        ? QueryBuilder.buildQuery({ params, filterConditions, baseUrl })
-        : null;
     return this.useSWRMutation(url, fetcher<T, D>);
   }
 
-  public static get<
-    TRes,
-    TFilter extends TFilterField<string> = string,
-    TReq = any
-  >(baseUrl: string) {
+  public static get<TRes, TReq = unknown>(url: string) {
     return ({
       shouldFetch = true,
       params = {},
-      filterConditions,
-    }: TSWRWithPermissionParams<TFilter> = {}) =>
-      this.useSWRWithPermission<TTransformResponse<TRes>, TFilter, TReq>({
-        baseUrl: shouldFetch ? baseUrl : null,
+    }: TSWRWithPermissionParams = {}) =>
+      this.useSWRWithPermission<TTransformResponse<TRes>, TReq>({
+        url: shouldFetch ? url : null,
         params,
-        filterConditions,
       });
   }
 
-  public static getList<
-    TRes,
-    TFilter extends TFilterField<string> = string,
-    TReq = any
-  >(baseUrl: string) {
+  public static getList<TRes, TReq = unknown>(url: string) {
     return ({
       shouldFetch = true,
       params = {},
-      filterConditions,
       config,
-    }: TSWRWithPermissionParams<TFilter> = {}) =>
-      this.useSWRWithPermission<TTransformPagination<TRes>, TFilter, TReq>({
-        baseUrl: shouldFetch ? baseUrl : null,
+    }: TSWRWithPermissionParams = {}) =>
+      this.useSWRWithPermission<TTransformPagination<TRes>, TReq>({
+        url: shouldFetch ? url : null,
         params,
-        filterConditions,
         config,
       });
   }
 
-  public static triggerGetBlob<
-    TFilter extends TFilterField<string> = string,
-    TReq = any
-  >(baseUrl: string) {
-    return ({
-      shouldFetch = true,
-      params = {},
-      filterConditions = [],
-    }: TSWRWithPermissionParams<TFilter> = {}) => {
-      const allowFetch = true;
-      // TODO: Uncomment
-      // this.usePermissionAPI({
-      //   path: baseUrl,
-      //   method,
-      // });
-      const url =
-        allowFetch && baseUrl
-          ? QueryBuilder.buildQuery({ params, filterConditions, baseUrl })
-          : null;
-
-      return this.useSWRMutation(url, getBlobFetcher);
-    };
-  }
-
-  public static trigger<
-    TRes,
-    TFilter extends TFilterField<string> = string,
-    TReq = TBaseFetcherOptions<any>
-  >(baseUrl: string, method: TAxiosMethod) {
-    return ({
-      shouldFetch = true,
-      params = {},
-      filterConditions,
-    }: TSWRWithPermissionParams<TFilter>) =>
-      this.useSWRMutationWithPermission<TRes, TFilter, TReq>({
-        baseUrl: shouldFetch ? baseUrl : null,
+  public static trigger<TRes, TReq = TBaseFetcherOptions<unknown>>(
+    url: string,
+    method: TAxiosMethod
+  ) {
+    return ({ shouldFetch = true, params = {} }: TSWRWithPermissionParams) =>
+      this.useSWRMutationWithPermission<TRes, TReq>({
+        url: shouldFetch ? url : null,
         params,
         method,
-        filterConditions: filterConditions ?? [],
       });
   }
 }

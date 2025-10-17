@@ -1,7 +1,7 @@
 import type { AxiosResponse } from "axios";
 
 import type { TBaseFetcherOptions, TResponse } from "../types/axios.type";
-import type { TTransformResponse } from "../types/base.type";
+import type { TErrorResponse, TTransformResponse } from "../types/base.type";
 import axiosInstance from "./instance";
 import { normalizeUrl } from "./normalize-url";
 
@@ -39,7 +39,7 @@ export const getTriggerFetcher = async <T, D = unknown>(
   } catch (error) {
     return {
       status: "failed",
-      error,
+      error: error as unknown as TErrorResponse,
     };
   }
 };
@@ -64,7 +64,7 @@ export const postFetcher = async <T, D = unknown>(
   } catch (error) {
     return {
       status: "failed",
-      error,
+      error: error as unknown as TErrorResponse,
     };
   }
 };
@@ -88,7 +88,7 @@ export const putFetcher = async <T, D = unknown>(
   } catch (error) {
     return {
       status: "failed",
-      error,
+      error: error as unknown as TErrorResponse,
     };
   }
 };
@@ -112,7 +112,7 @@ export const patchFetcher = async <T, D = object>(
   } catch (error) {
     return {
       status: "failed",
-      error,
+      error: error as unknown as TErrorResponse,
     };
   }
 };
@@ -136,7 +136,7 @@ export const deleteFetcher = async <T, D = unknown>(
   } catch (error) {
     return {
       status: "failed",
-      error,
+      error: error as unknown as TErrorResponse,
     };
   }
 };
