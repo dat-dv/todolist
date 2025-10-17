@@ -120,30 +120,27 @@ namespace TodoListApi.Extensions
         }
 
 
-        public static void AutoMigration(this IApplicationBuilder app, IConfiguration configuration)
+        public static WebApplication AutoMigration(this WebApplication app)
         {
-            var autoMigrate = configuration.GetValue<bool>("AUTO_MIGRATE", false);
-
-            if (autoMigrate)
+            using (var scope = app.Services.CreateScope())
             {
-                using (var scope = app.ApplicationServices.CreateScope())
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                logger.LogInformation("Running AutoMigration...");
+
+                try
                 {
                     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<AppDbContext>>();
+                    dbContext.Database.Migrate();
 
-                    try
-                    {
-                        logger.LogInformation("Running database migrations...");
-                        dbContext.Database.Migrate();
-                        logger.LogInformation("Database migrations completed successfully.");
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.LogError(ex, "Error running migrations");
-                        throw;
-                    }
+                    logger.LogInformation("AutoMigration completed successfully.");
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "AutoMigration failed: {Message}", ex.Message);
+                    throw;
                 }
             }
+            return app;
         }
     }
 }

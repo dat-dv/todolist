@@ -36,7 +36,7 @@ builder.Services.AddCorsConfiguration();
 builder.Services.AddApplicationServices();
 builder.Services.AddSwaggerConfiguration();
 var app = builder.Build();
-app.AutoMigration(builder.Configuration);
+app.AutoMigration();
 // Configure pipeline
 app.ConfigurePipeline();
 

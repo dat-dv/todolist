@@ -11,7 +11,7 @@ namespace TodoListApi.Extensions
                 c.RoutePrefix = string.Empty;
             });
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
             app.UseCors("AllowAll");
             app.UseAuthentication();
             app.UseAuthorization();

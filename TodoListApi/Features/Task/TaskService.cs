@@ -98,6 +98,11 @@ public class TaskService : ITaskService
         }
 
         task.Title = updateTaskDto.Title ?? task.Title;
+        task.IsCompleted = updateTaskDto.IsCompleted ?? task.IsCompleted;
+        if (updateTaskDto.IsCompleted != null)
+        {
+            task.CompletedAt = updateTaskDto.IsCompleted.Value ? DateTime.UtcNow : null;
+        }
 
         await _context.SaveChangesAsync();
 

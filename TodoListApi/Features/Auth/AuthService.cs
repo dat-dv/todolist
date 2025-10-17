@@ -20,6 +20,24 @@ public class AuthService : IAuthService
         _configuration = configuration;
     }
 
+    public async Task<UserInfoDto> GetCurrentUserAsync(int userId)
+    {
+        var user = await _context.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user == null)
+        {
+            throw new UnauthorizedAccessException("User not found");
+        }
+
+        return new UserInfoDto
+        {
+            Id = user.Id,
+            Username = user.Username,
+            CreatedAt = user.CreatedAt
+        };
+    }
 
     public async Task<AuthResponseDto> RegisterAsync(RegisterDto registerDto)
     {

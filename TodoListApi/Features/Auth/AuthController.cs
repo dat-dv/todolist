@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TodoListApi.Features.Auth.DTOs;
 
@@ -14,6 +15,26 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
+    private int GetUserId()
+    {
+        var userIdClaim = User.FindFirst("UserId")?.Value;
+        if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+        {
+            throw new UnauthorizedAccessException("Invalid user token");
+        }
+        return userId;
+    }
+
+    [HttpGet("me")]
+    [Authorize]
+    [ProducesResponseType(typeof(UserInfoDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<UserInfoDto>> GetCurrentUser()
+    {
+        var userId = GetUserId();
+        var user = await _authService.GetCurrentUserAsync(userId);
+        return Ok(user);
+    }
     [HttpPost("register")]
     public async Task<ActionResult<AuthResponseDto>> Register([FromBody] RegisterDto registerDto)
     {
