@@ -60,7 +60,7 @@ const RegisterForm: React.FC = () => {
           label="Username"
           id="username"
           {...register("username")}
-          error={errors.username?.message as unknown as string}
+          error={errors.username?.message}
         />
 
         <CustomInput
@@ -68,7 +68,7 @@ const RegisterForm: React.FC = () => {
           id="password"
           type="password"
           {...register("password")}
-          error={errors.password?.message as unknown as string}
+          error={errors.password?.message}
         />
 
         <CustomInput
@@ -76,7 +76,7 @@ const RegisterForm: React.FC = () => {
           id="confirmPassword"
           type="password"
           {...register("confirmPassword")}
-          error={errors.confirmPassword?.message as unknown as string}
+          error={errors.confirmPassword?.message}
         />
 
         <div className="flex justify-center">
