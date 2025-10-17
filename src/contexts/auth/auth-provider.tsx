@@ -6,9 +6,12 @@ import { AuthContext } from "./auth-context";
 import { checkShouldFetch } from "../../utils/check-should-fetch";
 import { useGetMyProfile } from "../../hooks/user/use-profile-me";
 import type { TUser } from "../../types/entities/User.entity";
+import { PATHS } from "../../configs/path.config";
+import { useRouter } from "../../hooks/use-router";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const shouldFetch = checkShouldFetch();
+  const router = useRouter();
 
   const {
     data: profile,
@@ -40,8 +43,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         isLoggedIn: !!profile?.username,
         isLoading: false,
       }));
+      router.push(PATHS.HOME);
     }
-  }, [isLoadingProfile, profile, shouldFetch]);
+  }, [isLoadingProfile, profile, router, shouldFetch]);
 
   return (
     <AuthContext.Provider value={context}>{children}</AuthContext.Provider>

@@ -11,13 +11,13 @@ type TPrivateGuardProps = {
 export function PrivateGuard({ children }: TPrivateGuardProps) {
   const router = useRouter();
 
-  const { isLoading, isLoggedIn } = useAuth();
+  const { isLoading, isLoggedIn, user } = useAuth();
 
   useEffect(() => {
-    if (!isLoggedIn && !isLoading) {
+    if (!user?.username && !isLoading) {
       router.replace(PATHS.LOGIN);
     }
-  }, [router, isLoggedIn, isLoading]);
+  }, [router, isLoggedIn, isLoading, user]);
 
   if (isLoading) {
     return <LoadingScreen />;

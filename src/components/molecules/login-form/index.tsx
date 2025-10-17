@@ -21,7 +21,7 @@ const LoginForm = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<TLoginFormData>({
-    defaultValues: { username: "", password: "" },
+    defaultValues: { username: "john_doe", password: "SecurePass123!" },
     resolver: zodResolver(loginSchema),
   });
 
