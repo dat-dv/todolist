@@ -22,8 +22,6 @@ export type TFailure = {
 export type TBaseFetcherOptions<D> = {
   arg?: D & {
     extendUrl?: string;
-    isFormData?: boolean;
-    instanceType?: TAxiosInstance;
     withNormalize?: boolean;
   };
 };

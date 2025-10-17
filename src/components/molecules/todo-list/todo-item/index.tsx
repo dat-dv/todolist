@@ -40,7 +40,7 @@ const TodoItem: React.FC<TTodoItemProps> = ({
       </button>
       <button
         disabled={disabled}
-        onClick={() => onToggle(todo.id, isCompleted)}
+        onClick={() => onToggle(todo.id, !isCompleted)}
         aria-label={isCompleted ? "Mark active" : "Mark completed"}
         className={`flex items-center justify-center shrink-0 h-9 w-9 rounded-md border-2 transition ${
           isCompleted
@@ -71,7 +71,7 @@ const TodoItem: React.FC<TTodoItemProps> = ({
           isCompleted ? "line-through text-gray-400" : "text-gray-900"
         }`}
       >
-        <div role="button" tabIndex={0} className="select-none -mt-2">
+        <div role="button" tabIndex={0} className="select-none -mt-0.5">
           {todo?.title}
         </div>
       </div>

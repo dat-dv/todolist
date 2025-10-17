@@ -1,32 +1,34 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import TodoInput from "./todo-input";
 import type { TTask } from "../../../types/entities/task.entity";
 import { toast } from "react-toastify";
 import TodoItem from "./todo-item";
+import { useGetTasks } from "../../../hooks/task/use-get-tasks";
+import { useDeleteTask } from "../../../hooks/task/use-delete-task";
+import { useUpdateTask } from "../../../hooks/task/use-toggle-task";
+import { useCreateTask } from "../../../hooks/task/use-create-task";
 
 const TodoList = () => {
   const [idTaskEdited, setTaskIdEdited] = useState<number | undefined>(
     undefined
   );
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const todos: TTask[] = [
-    {
-      id: 1,
-      title:
-        " Sample TodoSample TodoSample TodoSample TodoSample TodoSample TodoSample TodoSample TodoSample TodoSample TodoSample TodoSample TodoSample TodoSample TodoSample TodoSample TodoSample TodoSample Todo",
-      isCompleted: false,
-      createdAt: new Date().toISOString(),
-      completedAt: null,
-    },
-    {
-      id: 2,
-      title: "Another Todo",
-      isCompleted: true,
-      createdAt: new Date().toISOString(),
-      completedAt: new Date().toISOString(),
-    },
-  ];
+  const { trigger: trigerCreatTask } = useCreateTask({
+    shouldFetch: true,
+  });
+
+  const { trigger: triggerDeleteTask } = useDeleteTask({
+    shouldFetch: true,
+  });
+  const { trigger: triggerUpdateTask } = useUpdateTask({
+    shouldFetch: true,
+  });
+
+  const { data: tasskRes, mutate: revalidateTasks } = useGetTasks({
+    shouldFetch: true,
+  });
+
+  const { value: todos = [], ...pagination } = tasskRes || {};
   const editedTask = useMemo(() => {
     return todos.find((todo) => todo.id === idTaskEdited);
   }, [todos, idTaskEdited]);
@@ -34,18 +36,36 @@ const TodoList = () => {
   const handleAddTodo = (task: Partial<TTask>) => {
     const isEdit = !!task?.id;
     if (isEdit) {
+      triggerUpdateTask(task);
       toast.success("Todo updated successfully");
     } else {
+      trigerCreatTask(task);
       toast.success("Todo added successfully");
     }
   };
 
-  const handleRemoveTodo = (id: number) => {
+  const handleRemoveTodo = async (id: number) => {
+    const res = await triggerDeleteTask({ extendUrl: `/${id}` });
+    if (res.status !== "success") {
+      toast.error("Failed to remove todo");
+      return;
+    }
+    revalidateTasks();
     toast.success("Todo removed successfully");
   };
 
-  const handleToggleTodo = (id: number, isCompleted: boolean) => {
+  const handleToggleTodo = async (id: number, isCompleted: boolean) => {
+    const res = await triggerUpdateTask({
+      id: id,
+      isCompleted: isCompleted,
+      extendUrl: `/${id}`,
+    });
+    if (res.status !== "success") {
+      toast.error("Failed to toggle todo");
+      return;
+    }
     toast.success("Todo toggled successfully");
+    revalidateTasks();
   };
 
   const handleClickEdit = (id?: number) => {

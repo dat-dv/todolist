@@ -5,8 +5,10 @@ export type TPaginationReq = {
 
 export type TPagiantionRes<T> = {
   count: number;
-  items: T[];
-  limit: number;
-  offset: number;
-  totalCount: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  value: T[];
 };
