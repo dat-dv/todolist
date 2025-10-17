@@ -1,14 +1,10 @@
 import axios from "axios";
 
 import { SITE_CONFIG } from "../configs/site.config";
-import {
-  getAccessToken,
-  getRefreshToken,
-  removeAccessToken,
-} from "./local-storage";
+import { getAccessToken } from "./local-storage";
 
 const token = getAccessToken();
-const _refreshToken = getRefreshToken();
+// const _refreshToken = getRefreshToken();
 
 const axiosInstance = axios.create({
   baseURL: `${SITE_CONFIG.BACKEND_URL}`,
@@ -33,7 +29,7 @@ axiosInstance.interceptors.response.use(
       try {
         throw new Error("Refresh token failed");
       } catch {
-        removeAccessToken();
+        //
       }
     }
     return Promise.reject(

@@ -52,9 +52,6 @@ const TodoInput: React.FC<TTodoInputProps> = ({
           {...register("task")}
           error={errors.task?.message}
         />
-        {errors.task && (
-          <p className="text-red-500 text-sm mt-1">{errors.task.message}</p>
-        )}
       </div>
 
       <CustomButton

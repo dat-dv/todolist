@@ -1,5 +1,5 @@
 import useAuth from "../../../hooks/use-auth";
-import { setSession } from "../../../utils/local-storage";
+import { removeAccessToken, setSession } from "../../../utils/local-storage";
 import { useRouter } from "../../../hooks/use-router";
 import { useTriggerLogin } from "../../../hooks/user/use-trigger-login";
 import { toast } from "react-toastify";
@@ -37,6 +37,7 @@ const LoginForm = () => {
       toast.success("Login successful");
       router.push(PATHS.HOME);
     } else {
+      removeAccessToken();
       toast.error(res?.error?.message || "Login failed");
     }
   };

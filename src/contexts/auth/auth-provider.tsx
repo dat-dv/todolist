@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 
-// import { useGetMyProfile } from "src/hooks/swr/vehicle/get/organization-master";
 import type { AuthContextType } from "./auth-provider.types";
 import { AuthContext } from "./auth-context";
 import { checkShouldFetch } from "../../utils/check-should-fetch";
