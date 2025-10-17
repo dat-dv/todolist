@@ -37,7 +37,6 @@ builder.Services.AddApplicationServices();
 builder.Services.AddSwaggerConfiguration();
 var app = builder.Build();
 app.AutoMigration(builder.Configuration);
-
 // Configure pipeline
 app.ConfigurePipeline();
 
