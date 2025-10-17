@@ -3,5 +3,5 @@ import REQUEST from "../../utils/request";
 
 export const useCreateTask = REQUEST.trigger<unknown, Partial<TTask>>(
   "/tasks",
-  "PATCH"
+  "POST"
 );

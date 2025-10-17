@@ -7,11 +7,13 @@ import { useGetTasks } from "../../../hooks/task/use-get-tasks";
 import { useDeleteTask } from "../../../hooks/task/use-delete-task";
 import { useUpdateTask } from "../../../hooks/task/use-toggle-task";
 import { useCreateTask } from "../../../hooks/task/use-create-task";
+import Pagination from "../pagination";
 
 const TodoList = () => {
   const [idTaskEdited, setTaskIdEdited] = useState<number | undefined>(
     undefined
   );
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { trigger: trigerCreatTask } = useCreateTask({
     shouldFetch: true,
@@ -26,22 +28,34 @@ const TodoList = () => {
 
   const { data: tasskRes, mutate: revalidateTasks } = useGetTasks({
     shouldFetch: true,
+    params: {
+      page: currentPage,
+      limit: 10,
+    },
   });
 
-  const { value: todos = [], ...pagination } = tasskRes || {};
+  const {
+    value: todos = [],
+    totalPages = 1,
+    hasNextPage,
+    hasPreviousPage,
+  } = tasskRes || {};
+
   const editedTask = useMemo(() => {
     return todos.find((todo) => todo.id === idTaskEdited);
   }, [todos, idTaskEdited]);
 
-  const handleAddTodo = (task: Partial<TTask>) => {
+  const handleAddTodo = async (task: Partial<TTask>) => {
     const isEdit = !!task?.id;
     if (isEdit) {
-      triggerUpdateTask(task);
+      await triggerUpdateTask({ ...task, extendUrl: `/${task.id}` });
       toast.success("Todo updated successfully");
     } else {
-      trigerCreatTask(task);
+      await trigerCreatTask(task);
       toast.success("Todo added successfully");
     }
+
+    revalidateTasks();
   };
 
   const handleRemoveTodo = async (id: number) => {
@@ -94,6 +108,13 @@ const TodoList = () => {
           />
         ))}
       </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        hasNext={hasNextPage}
+        hasPrev={hasPreviousPage}
+      />
     </div>
   );
 };

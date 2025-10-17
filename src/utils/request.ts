@@ -15,6 +15,7 @@ import type {
   TTransformPagination,
   TTransformResponse,
 } from "../types/base.type";
+import { buildParams } from "./build-params";
 
 type TSWRWithPermissionParams = {
   shouldFetch?: boolean;
@@ -38,13 +39,14 @@ class REQUEST {
   private static useSWRWithPermission<T, D = unknown>({
     url,
     config = {},
+    params = {},
   }: {
     url?: string | null;
-    params: Record<string, unknown>;
+    params?: Record<string, unknown>;
     config?: SWRConfiguration;
   }) {
-    const allowFetch = !!url;
-    return this.useSWR(allowFetch ? url : null, getFetcher<T, D>, config);
+    const fullUrl = buildParams({ url, queryParams: params });
+    return this.useSWR(fullUrl, getFetcher<T, D>, config);
   }
 
   private static useSWRMutationWithPermission<
