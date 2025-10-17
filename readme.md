@@ -53,6 +53,14 @@ src/
 
 ```bash
 npm install
-npm run build   # build for production
+npm run build
 npm run start
+```
+
+### Build and run with Docker
+
+```bash
+# Build image
+docker-compose up -d
+# Access app at http://localhost:3000
 ```
