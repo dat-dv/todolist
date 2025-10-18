@@ -36,7 +36,6 @@ const LoginForm = () => {
       const token = res.data.token;
       axiosInstance.defaults.headers.Authorization = `Bearer ${token}`;
       setSession(token);
-      console.log(11, res.data.user);
       setUser?.(res.data.user);
       toast.success("Login successful");
       router.push(PATHS.HOME);

@@ -19,19 +19,27 @@ const TodoItem: React.FC<TTodoItemProps> = ({
   const isEditing = idTaskEdited === todo?.id && !!todo?.id;
   const disabled = !!idTaskEdited;
 
-  if (!todo?.id) return <></>;
+  if (!todo?.id) return null;
 
   return (
     <li
-      className={`flex flex-wrap sm:flex-nowrap items-start sm:items-center gap-3 sm:gap-4 ${className}`}
+      className={`
+        flex flex-col sm:flex-row 
+        items-start sm:items-center 
+        gap-3 sm:gap-4 
+        px-4 py-3
+        transition-all duration-200 
+        hover:shadow-md
+        ${className}
+      `}
       {...rest}
     >
-      <div className="flex items-center gap-3 sm:gap-4">
+      <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
         <ButtonWrapper
           onClick={() => onRemove(todo?.id)}
           disabled={disabled}
           ariaLabel="Delete"
-          className="bg-red-500 hover:bg-red-600 text-white"
+          className="bg-red-500 hover:bg-red-600 text-white w-9 h-9 sm:w-10 sm:h-10"
         >
           <DeleteIcon />
         </ButtonWrapper>
@@ -40,10 +48,10 @@ const TodoItem: React.FC<TTodoItemProps> = ({
           onClick={() => onToggle(todo.id, !isCompleted)}
           disabled={disabled}
           ariaLabel={isCompleted ? "Mark active" : "Mark completed"}
-          className={`border-2 ${
+          className={`border-2 w-9 h-9 sm:w-10 sm:h-10 ${
             isCompleted
               ? "bg-green-600 hover:bg-green-700 border-green-600 text-white"
-              : "bg-gray-300 hover:bg-gray-400 border-gray-400 text-gray-600"
+              : "bg-gray-200 hover:bg-gray-300 border-gray-400 text-gray-600"
           }`}
         >
           {isCompleted && <CheckIcon />}
@@ -51,21 +59,22 @@ const TodoItem: React.FC<TTodoItemProps> = ({
       </div>
 
       <div
-        className={`flex-1 min-w-0 font-mono text-base sm:text-lg md:text-[20px] ${
-          isCompleted ? "line-through text-gray-400" : "text-gray-900"
-        }`}
+        className={`
+          flex-1 min-w-0 font-mono 
+          text-sm sm:text-base md:text-lg 
+          leading-snug sm:leading-normal
+          ${isCompleted ? "line-through text-gray-400" : "text-gray-900"}
+        `}
       >
-        <div className="select-none break-all overflow-wrap-anywhere">
-          {todo?.title}
-        </div>
+        <div className="break-words overflow-hidden">{todo?.title}</div>
       </div>
 
-      <div className="flex items-center gap-2 ml-auto">
+      <div className="flex items-center gap-2 sm:ml-auto mt-2 sm:mt-0">
         {isEditing ? (
           <ButtonWrapper
             onClick={() => handleClickEdit(undefined)}
             ariaLabel="Cancel Edit"
-            className="bg-gray-500 hover:bg-gray-600 text-white"
+            className="bg-gray-500 hover:bg-gray-600 text-white w-9 h-9 sm:w-10 sm:h-10"
           >
             <CancelEditIcon />
           </ButtonWrapper>
@@ -74,7 +83,7 @@ const TodoItem: React.FC<TTodoItemProps> = ({
             onClick={() => handleClickEdit(todo.id)}
             disabled={disabled}
             ariaLabel="Edit"
-            className="bg-blue-500 hover:bg-blue-600 text-white"
+            className="bg-blue-500 hover:bg-blue-600 text-white w-9 h-9 sm:w-10 sm:h-10"
           >
             <EditIcon />
           </ButtonWrapper>

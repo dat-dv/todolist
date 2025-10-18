@@ -15,16 +15,18 @@ const TodoList = () => {
   );
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { trigger: trigerCreatTask } = useCreateTask({
+  const { trigger: trigerCreatTask, isMutating: isCreating } = useCreateTask({
     shouldFetch: true,
   });
 
   const { trigger: triggerDeleteTask } = useDeleteTask({
     shouldFetch: true,
   });
-  const { trigger: triggerUpdateTask } = useUpdateTask({
+  const { trigger: triggerUpdateTask, isMutating: isUpdating } = useUpdateTask({
     shouldFetch: true,
   });
+
+  const isSubmitting = isUpdating || isCreating;
 
   const { data: tasskRes, mutate: revalidateTasks } = useGetTasks({
     shouldFetch: true,
@@ -46,16 +48,40 @@ const TodoList = () => {
   }, [todos, idTaskEdited]);
 
   const handleAddTodo = async (task: Partial<TTask>) => {
-    const isEdit = !!task?.id;
-    if (isEdit) {
-      await triggerUpdateTask({ ...task, extendUrl: `/${task.id}` });
-      toast.success("Todo updated successfully");
-    } else {
-      await trigerCreatTask(task);
-      toast.success("Todo added successfully");
+    const res = await trigerCreatTask(task);
+    const isSuccess = res.status === "success";
+    if (!isSuccess) {
+      console.log(111, res.error);
+      toast.error("Failed to create todo");
+      return;
     }
-
+    toast.success("Todo created successfully");
     revalidateTasks();
+  };
+
+  const handleEditTask = async (task: Partial<TTask>) => {
+    const res = await triggerUpdateTask({
+      ...task,
+      extendUrl: `/${task.id}`,
+    });
+    const isSuccess = res.status === "success";
+    if (!isSuccess) {
+      toast.error("Failed to update todo");
+      return;
+    }
+    toast.success("Todo updated successfully");
+    revalidateTasks();
+  };
+
+  const handleSubmitTodo = async (task: Partial<TTask>) => {
+    const isEdit = !!task?.id;
+
+    console.log(11, task);
+    if (isEdit) {
+      handleEditTask(task);
+    } else {
+      handleAddTodo(task);
+    }
   };
 
   const handleRemoveTodo = async (id: number) => {
@@ -90,12 +116,13 @@ const TodoList = () => {
     <div>
       <div className="max-w-fit mx-auto">
         <TodoInput
-          onAdd={handleAddTodo}
+          onAdd={handleSubmitTodo}
           task={editedTask}
           isEdited={!!idTaskEdited}
+          isSubmitting={isSubmitting}
         />
       </div>
-      <div className="max-w-[60%] mx-auto">
+      <div className="mx-auto">
         {todos?.map((todo) => (
           <TodoItem
             className="mb-4 "

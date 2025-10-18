@@ -7,7 +7,6 @@ import { getAccessToken } from "../../../utils/local-storage";
 const PrivateGuard: React.FC = () => {
   const hasToken = getAccessToken();
 
-  console.log(11, hasToken);
   if (!hasToken) {
     return <Navigate to={PATHS.LOGIN} replace />;
   }
