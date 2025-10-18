@@ -9,7 +9,7 @@ export const SimpleLayout: React.FC<TSimpleLayoutProps> = ({ children }) => {
         <UserMenu />
       </div>
       <div className="flex-1 w-full">
-        <div className="min-h-[90vh] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+        <div className="sm:min-h-[90vh] min-h-[85vh] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
           {children}
         </div>
         <Footer />
