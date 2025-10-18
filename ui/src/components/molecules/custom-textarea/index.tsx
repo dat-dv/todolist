@@ -12,12 +12,14 @@ const CustomTextarea = forwardRef<HTMLTextAreaElement, TCustomTextareaProps>(
       maxLength,
       showCharCount = false,
       onChange,
+      absoluteError,
+      value = "",
       ...rest
     },
     ref
   ) => {
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-    const [currentLength, setCurrentLength] = useState(0);
+    const currentLength = value.length;
 
     // Auto-resize function
     const adjustHeight = () => {
@@ -25,14 +27,8 @@ const CustomTextarea = forwardRef<HTMLTextAreaElement, TCustomTextareaProps>(
       if (textarea) {
         textarea.style.height = "auto";
         textarea.style.height = `${textarea.scrollHeight}px`;
-        // Cập nhật character count
-        setCurrentLength(textarea.value.length);
       }
     };
-
-    useEffect(() => {
-      adjustHeight();
-    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       adjustHeight();
@@ -42,7 +38,11 @@ const CustomTextarea = forwardRef<HTMLTextAreaElement, TCustomTextareaProps>(
     };
 
     return (
-      <div className="flex flex-col space-y-1 w-full max-w-full flex-1">
+      <div
+        className={`flex flex-col space-y-1 w-full max-w-full flex-1 ${
+          absoluteError ? "relative" : ""
+        }`}
+      >
         {!!label && (
           <label
             htmlFor={id}
@@ -64,8 +64,8 @@ const CustomTextarea = forwardRef<HTMLTextAreaElement, TCustomTextareaProps>(
               }
             }}
             id={id}
+            value={value}
             rows={rows}
-            maxLength={maxLength}
             onChange={handleChange}
             {...rest}
             className={`
@@ -96,19 +96,27 @@ const CustomTextarea = forwardRef<HTMLTextAreaElement, TCustomTextareaProps>(
           {showCharCount && maxLength && (
             <div
               className={`absolute bottom-1.5 right-2 text-xs pointer-events-none ${
-                currentLength >= maxLength ? "text-red-500" : "text-gray-500"
+                currentLength - 1 >= maxLength
+                  ? "text-red-500"
+                  : "text-gray-500"
               }`}
             >
               {currentLength}/{maxLength}
             </div>
           )}
         </div>
-        {error && <p className="text-red-500 text-xs sm:text-sm">{error}</p>}
+        {error && (
+          <p
+            className={`text-red-500 text-xs sm:text-sm ${
+              absoluteError ? "absolute left-0 top-full mt-1" : "mt-1"
+            }`}
+          >
+            {error}
+          </p>
+        )}
       </div>
     );
   }
 );
-
-CustomTextarea.displayName = "CustomTextarea";
 
 export default CustomTextarea;

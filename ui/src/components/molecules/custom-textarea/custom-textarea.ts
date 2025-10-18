@@ -11,4 +11,5 @@ export type TCustomTextareaProps = {
   maxLength?: number;
   showCharCount?: boolean;
   resize?: "none" | "vertical" | "horizontal" | "both";
+  absoluteError?: boolean;
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;

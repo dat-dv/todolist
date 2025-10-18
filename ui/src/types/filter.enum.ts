@@ -5,6 +5,6 @@ export enum EFIlterValue {
 }
 
 export enum ESortOrder {
-  NEWEST = "1",
-  OLDEST = "0",
+  OLDEST = "1",
+  NEWEST = "0",
 }

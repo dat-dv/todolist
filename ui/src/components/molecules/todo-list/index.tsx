@@ -176,15 +176,14 @@ const TodoList = () => {
         activeCount={activeCount}
         completedCount={completedCount}
       />
-      <div className="max-w-fit mx-auto">
-        <TodoInput
-          onAdd={handleSubmitTodo}
-          task={editedTask}
-          isEdited={!!idTaskEdited}
-          isSubmitting={isSubmitting}
-        />
-      </div>
-      <div className="md:max-w-[60%] max-w-full mx-auto">
+      <TodoInput
+        onAdd={handleSubmitTodo}
+        task={editedTask}
+        isEdited={!!idTaskEdited}
+        isSubmitting={isSubmitting}
+        className="sm:max-w-md max-w-full mx-auto mb-6"
+      />
+      <div className="md:max-w-xl max-w-full mx-auto">
         {todos?.map((todo, index) => {
           const todoIndex = (filters.page - 1) * filters.pageSize + index + 1;
           return (

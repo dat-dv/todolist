@@ -8,6 +8,7 @@ import FilterIcon from "../../../atoms/icons/filter-icon";
 import CustomInput from "../../custom-input";
 import Drawer from "../../drawer";
 import StatsBadge from "../../../atoms/stats-badge.tsx";
+import CustomButton from "../../../atoms/custom-button/index.tsx";
 
 const TODO_FILTER_OPTIONS = [
   { value: EFIlterValue.ALL, label: "All" },
@@ -38,6 +39,7 @@ const TodoFilter: React.FC<TTodoFilterProps> = ({
 
   useEffect(() => {
     onFilterChange({ search: debouncedSearch });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,9 +52,7 @@ const TodoFilter: React.FC<TTodoFilterProps> = ({
 
   return (
     <>
-      {/* Main Bar */}
       <div className="w-full flex items-center justify-between gap-4 mb-6 pb-4 border-b border-gray-200">
-        {/* Stats */}
         <div className="flex flex-wrap items-center gap-3 text-sm">
           <StatsBadge label="Total" value={totalCount} color="primary" />
           {isTodo && (
@@ -74,13 +74,13 @@ const TodoFilter: React.FC<TTodoFilterProps> = ({
         </div>
 
         {/* Filter Button */}
-        <button
+        <CustomButton
           onClick={() => setIsDrawerOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+          className="flex items-center gap-2 px-4 py-2"
         >
           <FilterIcon className="w-5 h-5" />
           <span className="hidden sm:inline">Filter & Sort</span>
-        </button>
+        </CustomButton>
       </div>
 
       {/* Drawer */}

@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CustomButton from "../../../atoms/custom-button";
 import { todoSchema, type TTodoInputData } from "./todo-input.schema";
@@ -14,12 +14,14 @@ const TodoInput: React.FC<TTodoInputProps> = ({
   isSubmitting = false,
   task,
   isEdited,
+  className,
+  ...rest
 }) => {
   const {
-    register,
+    control,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty, isValid },
   } = useForm<TTodoInputData>({
     resolver: zodResolver(todoSchema),
   });
@@ -36,41 +38,52 @@ const TodoInput: React.FC<TTodoInputProps> = ({
       ...(isEdit ? task || {} : {}),
       title: data.task,
     });
-    reset();
+    reset({ task: "" });
   };
 
+  const isDisableSubmit = disabled || isSubmitting || !isDirty || !isValid;
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-full max-w-full flex items-center gap-2 xs:gap-3 sm:gap-4 mb-4 xs:mb-6 sm:mb-8"
+      className={`w-full max-w-full flex items-center justify-center gap-2 xs:gap-3 sm:gap-4 mb-4 xs:mb-6 sm:mb-8 ${className}`}
+      {...rest}
     >
-      <div className="relative flex-1 min-w-full sm:min-w-[500px]">
-        <CustomTextarea
-          className="max-h-48"
-          {...register("task")}
-          id="task"
-          placeholder={placeholder}
-          error={errors.task?.message}
-          disabled={disabled}
-          showCharCount
-          maxLength={255}
+      <div className="relative flex-1">
+        <Controller
+          name="task"
+          control={control}
+          render={({ field }) => {
+            return (
+              <CustomTextarea
+                className="max-h-48"
+                {...field}
+                id="task"
+                placeholder={placeholder}
+                error={errors.task?.message}
+                disabled={disabled}
+                showCharCount
+                maxLength={255}
+                absoluteError
+              />
+            );
+          }}
         />
       </div>
 
       <CustomButton
         type="submit"
         className="
-          flex items-center justify-center gap-1 
-          px-2 xs:px-3 sm:px-4 
-          py-2 
-          flex-shrink-0
-          text-xs xs:text-sm sm:text-base
-        "
-        disabled={disabled}
+            flex items-center justify-center gap-1 
+            px-2
+            py-2 
+            flex-shrink-0
+            text-md 
+          "
+        disabled={isDisableSubmit}
         isLoading={isSubmitting}
       >
         <span>{isEdited ? "Edit" : "Add"}</span>
-        <PlusIcon className="w-4 h-4 xs:w-5 xs:h-5" />
+        <PlusIcon className="w-4 h-4" />
       </CustomButton>
     </form>
   );
