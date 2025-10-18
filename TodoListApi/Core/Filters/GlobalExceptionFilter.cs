@@ -28,10 +28,13 @@ namespace TodoListApi.Filters
                 _ => (int)HttpStatusCode.InternalServerError
             };
 
+            var errorTitle = GetErrorTitle(context.Exception);
+            var errorMessage = GetErrorMessage(context.Exception, errorTitle);
+
             var response = new
             {
-                error = GetErrorMessage(context.Exception),
-                message = context.Exception.Message,
+                title = errorTitle,
+                message = errorMessage,
                 statusCode = statusCode,
                 stackTrace = _env.IsDevelopment() ? context.Exception.StackTrace : null
             };
@@ -44,7 +47,7 @@ namespace TodoListApi.Filters
             context.ExceptionHandled = true;
         }
 
-        private string GetErrorMessage(Exception exception)
+        private string GetErrorTitle(Exception exception)
         {
             return exception switch
             {
@@ -53,6 +56,22 @@ namespace TodoListApi.Filters
                 ArgumentException => "Bad Request",
                 _ => "Internal Server Error"
             };
+        }
+
+        private string GetErrorMessage(Exception exception, string fallbackTitle)
+        {
+            // Ưu tiên: exception.Message -> fallbackTitle -> "Something went wrong"
+            if (!string.IsNullOrWhiteSpace(exception.Message))
+            {
+                return exception.Message;
+            }
+
+            if (!string.IsNullOrWhiteSpace(fallbackTitle))
+            {
+                return fallbackTitle;
+            }
+
+            return "Something went wrong";
         }
     }
 }
