@@ -1,21 +1,10 @@
 import { useState, useRef, useEffect } from "react";
+import type {
+  TCustomSelectOption,
+  TCustomSelectProps,
+} from "./custom-select.type";
 
-interface Option<T> {
-  value: T;
-  label: string;
-}
-
-interface CustomSelectProps<T> {
-  options: Option<T>[];
-  value: T;
-  onChange: (value: T) => void;
-  placeholder?: string;
-  label?: string;
-  className?: string;
-  variant?: "horizontal" | "vertical";
-}
-
-function CustomSelect<T>({
+function CustomSelect<T extends string | number = string | number>({
   options,
   value,
   onChange,
@@ -23,7 +12,7 @@ function CustomSelect<T>({
   label,
   className = "",
   variant = "horizontal",
-}: CustomSelectProps<T>) {
+}: TCustomSelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -43,8 +32,8 @@ function CustomSelect<T>({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleSelect = (option: Option<T>) => {
-    onChange(option.value);
+  const handleSelect = (option: TCustomSelectOption<T>) => {
+    onChange?.(option.value);
     setIsOpen(false);
   };
 

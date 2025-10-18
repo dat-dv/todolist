@@ -1,11 +1,15 @@
-import { useState, useEffect, useRef } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  type ComponentPropsWithoutRef,
+} from "react";
 import useAuth from "../../../hooks/use-auth";
 
-interface UserMenuProps {
-  className?: string;
-}
-
-const UserMenu = ({ className = "" }: UserMenuProps) => {
+const UserMenu = ({
+  className = "",
+  ...rest
+}: ComponentPropsWithoutRef<"div">) => {
   const { user, logOut } = useAuth();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -30,7 +34,7 @@ const UserMenu = ({ className = "" }: UserMenuProps) => {
   if (!username) return null;
 
   return (
-    <div className={`relative ${className}`} ref={menuRef}>
+    <div className={`relative ${className}`} ref={menuRef} {...rest}>
       <button
         onClick={toggleMenu}
         className="flex items-center space-x-2 focus:outline-none"

@@ -34,9 +34,27 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="mx-12 flex flex-col sm:flex-row justify-between items-center gap-4 py-4 border-t">
-      <p className="text-sm text-gray-400 text-center sm:text-left">
-        © {currentYear} TodoList. Licensed under MIT License.
-      </p>
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-center text-sm text-gray-400 text-center sm:text-left">
+        <span>© {currentYear} Đoàn Văn Đạt</span>
+        <span>
+          Contact:
+          <a
+            href="mailto:datdoan.dev@gmail.com"
+            className="px-1 hover:text-primary"
+          >
+            datdoan.dev@gmail.com
+          </a>
+          |
+          <a
+            href="https://github.com/dat-dv"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pl-1 hover:text-primary"
+          >
+            GitHub
+          </a>
+        </span>
+      </div>
       <nav className="flex gap-6">
         {FOOTER_LINKS.map((link, index) => (
           <Link

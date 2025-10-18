@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { forwardRef, useRef } from "react";
 import type { TCustomTextareaProps } from "./custom-textarea";
 
 const CustomTextarea = forwardRef<HTMLTextAreaElement, TCustomTextareaProps>(
