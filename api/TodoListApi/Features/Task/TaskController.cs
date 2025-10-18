@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TodoListApi.Common.DTOs;
 using TodoListApi.Features.Task.DTOs;
 using TodoListApi.Common.Binders;
+using TodoListApi.Common.Enums;
 
 namespace TodoListApi.Features.Task;
 
@@ -28,16 +29,21 @@ public class TaskController : ControllerBase
         return userId;
     }
 
+
     [HttpGet]
-    public async Task<ActionResult<TaskResponseDto>> GetTasks(
+    public async Task<IActionResult> GetTasks(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
-        [FromQuery][ModelBinder(BinderType = typeof(NullableBoolModelBinder))] bool? isCompleted = null)
+            [FromQuery][ModelBinder(BinderType = typeof(NullableBoolModelBinder))] bool? isCompleted = null,
+        [FromQuery] string? search = null,
+        [FromQuery] SortOrder? sortOrder = SortOrder.OldestFirst
+    )
     {
         var userId = GetUserId();
-        var result = await _taskService.GetTasksAsync(userId, page, pageSize, isCompleted);
+        var result = await _taskService.GetTasksAsync(userId, page, pageSize, isCompleted, search, sortOrder);
         return Ok(result);
     }
+
 
     [HttpGet("{id}")]
     public async Task<ActionResult<TaskResponseDto>> GetTask(int id)

@@ -13,9 +13,24 @@ namespace TodoListApi.Extensions
 {
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddDatabaseConfiguration(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddDatabaseConfiguration(this IServiceCollection services)
         {
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            var dbServer = Environment.GetEnvironmentVariable("DB_SERVER");
+            var dbName = Environment.GetEnvironmentVariable("DB_NAME");
+            var dbUser = Environment.GetEnvironmentVariable("DB_USER");
+            var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
+            var dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+            var connectionString =
+                $"Server={dbServer};Port={dbPort};Database={dbName};User={dbUser};Password={dbPassword};";
+
+
+            Console.WriteLine("Database Connection String: " + connectionString);
+
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new InvalidOperationException("Database connection string is not configured. Set ConnectionStrings__DefaultConnection in .env file");
+            }
+
             services.AddDbContext<AppDbContext>(options =>
                 options.UseMySql(
                     connectionString,
@@ -24,14 +39,19 @@ namespace TodoListApi.Extensions
                 )
             );
             return services;
+
+
         }
 
-        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services)
         {
-            var jwtKey = configuration["Jwt:Key"];
+            var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
+            var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+            var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+
             if (string.IsNullOrEmpty(jwtKey))
             {
-                throw new InvalidOperationException("JWT Key is not configured");
+                throw new InvalidOperationException("JWT Key not configured. Set JWT_KEY in .env file");
             }
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -43,8 +63,8 @@ namespace TodoListApi.Extensions
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = configuration["Jwt:Issuer"],
-                        ValidAudience = configuration["Jwt:Audience"],
+                        ValidIssuer = jwtIssuer,
+                        ValidAudience = jwtAudience,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
                         ClockSkew = TimeSpan.Zero
                     };

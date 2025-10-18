@@ -28,6 +28,17 @@ cp .env.be ./api/.env
 docker compose up -d --build
 ```
 
+> **⚠️ IMPORTANT SECURITY NOTE:**  
+> For demonstration and deployment convenience, this project includes `.env.be`, and `.env.fe` committed to the repository.
+>
+> **In production environments, NEVER commit these files!**
+>
+> - Add them to `.gitignore`
+> - Store secrets in environment variables or secure vaults (Azure Key Vault, AWS Secrets Manager, etc.)
+> - Use different secrets for each environment (dev, staging, production)
+>
+> These example files are provided **only** for quick local/demo setup.
+>
 > **Note:** We merge backend and frontend .env files and copy them into their respective folders so both Docker Compose and individual builds can access the correct environment variables.
 
 ---

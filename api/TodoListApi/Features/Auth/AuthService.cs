@@ -12,12 +12,10 @@ namespace TodoListApi.Features.Auth;
 public class AuthService : IAuthService
 {
     private readonly AppDbContext _context;
-    private readonly IConfiguration _configuration;
 
-    public AuthService(AppDbContext context, IConfiguration configuration)
+    public AuthService(AppDbContext context)
     {
         _context = context;
-        _configuration = configuration;
     }
 
     public async Task<UserInfoDto> GetCurrentUserAsync(int userId)
@@ -81,7 +79,13 @@ public class AuthService : IAuthService
             throw new UnauthorizedAccessException("Invalid credentials");
         }
 
-        var expirationHours = _configuration.GetValue<int>("Jwt:ExpirationHours", 24);
+        var expirationHoursStr = Environment.GetEnvironmentVariable("JWT_EXPIRATION_HOURS");
+        if (expirationHoursStr == null)
+        {
+            throw new InvalidOperationException("JWT_EXPIRATION_HOURS is not configured");
+        }
+
+        var expirationHours = int.Parse(expirationHoursStr);
 
         var expiresAt = DateTime.UtcNow.AddHours(expirationHours);
 
@@ -102,22 +106,47 @@ public class AuthService : IAuthService
 
     private string GenerateJwtToken(User user, DateTime expiresAt)
     {
+        var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
+        var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+        var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+
+        // Debug logs
+        Console.WriteLine($"JWT_KEY: {jwtKey}");
+        Console.WriteLine($"JWT_ISSUER: {jwtIssuer}");
+        Console.WriteLine($"JWT_AUDIENCE: {jwtAudience}");
+
+        if (string.IsNullOrEmpty(jwtKey))
+        {
+            throw new InvalidOperationException("JWT_KEY is not configured");
+        }
+
+        if (string.IsNullOrEmpty(jwtIssuer))
+        {
+            throw new InvalidOperationException("JWT_ISSUER is not configured");
+        }
+
+        if (string.IsNullOrEmpty(jwtAudience))
+        {
+            throw new InvalidOperationException("JWT_AUDIENCE is not configured");
+        }
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
         var claims = new[]
         {
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim("UserId", user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
-
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+        new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
+        new Claim("UserId", user.Id.ToString()),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+    };
 
         var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Audience"],
+            issuer: jwtIssuer,
+            audience: jwtAudience,
             claims: claims,
             expires: expiresAt,
-            signingCredentials: creds
+            signingCredentials: credentials
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);

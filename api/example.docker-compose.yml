@@ -1,3 +1,5 @@
+name: todolistapi
+
 version: "3.8"
 
 services:
@@ -5,10 +7,10 @@ services:
     image: mysql:8.0
     container_name: todolist_mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-todolist}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
     ports:
-      - "${MYSQL_PORT:-3306}:3306"
+      - "${DB_PORT:-3306}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -24,15 +26,17 @@ services:
       dockerfile: Dockerfile
     container_name: todolist_backend
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Production}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - DB_SERVER=mysql
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PORT=3306
       - JWT_KEY=${JWT_KEY}
       - JWT_ISSUER=${JWT_ISSUER}
       - JWT_AUDIENCE=${JWT_AUDIENCE}
       - JWT_EXPIRATION_HOURS=${JWT_EXPIRATION_HOURS}
       - AUTO_MIGRATE=${AUTO_MIGRATE}
-      - ConnectionStrings__DefaultConnection=Server=mysql;Port=3306;Database=${MYSQL_DATABASE};User=root;Password=${MYSQL_ROOT_PASSWORD};
     ports:
       - "${BACKEND_PORT:-5000}:8080"
     depends_on:
@@ -45,9 +49,11 @@ services:
     build:
       context: ./ui
       dockerfile: Dockerfile
+      args:
+        - VITE_BE_URL=${VITE_BE_URL}
     container_name: todolist_frontend
     ports:
-      - "3000:80"
+      - "${FRONTEND_PORT:-3000}:80"
     depends_on:
       - backend
     networks:
@@ -56,7 +62,9 @@ services:
 
 volumes:
   mysql_data:
+    name: todolistapi_mysql_data
 
 networks:
   todolist_network:
+    name: todolistapi_network
     driver: bridge

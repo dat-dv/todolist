@@ -3,6 +3,8 @@ using TodoListApi.Common.DTOs;
 using TodoListApi.Core.Data;
 using TodoListApi.Features.Task.DTOs;
 using TaskModel = TodoListApi.Core.Models.Task;
+using TodoListApi.Common.Enums;
+
 namespace TodoListApi.Features.Task;
 
 public class TaskService : ITaskService
@@ -14,17 +16,37 @@ public class TaskService : ITaskService
         _context = context;
     }
 
-    public async Task<PagedResultDto<TaskResponseDto>> GetTasksAsync(int userId, int page = 1, int pageSize = 10, bool? isCompleted = null)
+    public async Task<PagedResultDto<TaskResponseDto>> GetTasksAsync(
+        int userId,
+        int page = 1,
+        int pageSize = 10,
+        bool? isCompleted = null,
+        string? search = null,
+        SortOrder? sortOrder = SortOrder.OldestFirst)
     {
-        var query = _context.Tasks.Where(t => t.UserId == userId && t.DeletedAt == null);
+        var query = _context.Tasks
+            .Where(t => t.UserId == userId && t.DeletedAt == null);
+
         if (isCompleted.HasValue)
         {
             query = query.Where(t => t.IsCompleted == isCompleted.Value);
         }
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(t => t.Title.Contains(search));
+        }
+
+        // Sort by CreatedAt
+        query = sortOrder switch
+        {
+            SortOrder.OldestFirst => query.OrderBy(t => t.CreatedAt),
+            _ => query.OrderByDescending(t => t.CreatedAt) // NewestFirst (default)
+        };
+
         var totalCount = await query.CountAsync();
 
         var items = await query
-            .OrderByDescending(t => t.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Select(t => new TaskResponseDto

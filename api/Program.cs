@@ -1,11 +1,11 @@
 
 using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TodoListApi.Common.Filters;
-using TodoListApi.Core.Data;
 using TodoListApi.Extensions;
 using TodoListApi.Filters;
+
+// Load .env file
+DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,8 +30,8 @@ builder.Services.AddRouting(options =>
 });
 
 // Add custom configurations
-builder.Services.AddDatabaseConfiguration(builder.Configuration);
-builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddDatabaseConfiguration();
+builder.Services.AddJwtAuthentication();
 builder.Services.AddCorsConfiguration();
 builder.Services.AddApplicationServices();
 builder.Services.AddSwaggerConfiguration();

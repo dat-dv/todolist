@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import type { AuthContextType } from "./auth-provider.types";
 import { AuthContext } from "./auth-context";
@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     data: profile,
     mutate,
     isLoading,
+    error,
   } = useGetMyProfile({
     shouldFetch,
   });
@@ -45,6 +46,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       } as AuthContextType),
     [shouldFetch, profile, isLoading, setUser, logOut]
   );
+
+  useEffect(() => {
+    if (error) {
+      logOut();
+    }
+  }, [error]);
 
   return (
     <AuthContext.Provider value={context}>{children}</AuthContext.Provider>

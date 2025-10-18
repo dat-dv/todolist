@@ -119,7 +119,9 @@ const TodoList = () => {
       toast.error("Failed to toggle todo");
       return;
     }
-    toast.success("Todo toggled successfully");
+    toast.success(
+      `Todo ${isCompleted ? "completed" : "marked as incomplete"} successfully`
+    );
     revalidateTasks();
   };
 
