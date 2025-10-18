@@ -18,24 +18,26 @@ Connects to a .NET Core backend API for user authentication and task management.
 
 ## 📚 Project Structure
 
+```text
 ui/
-├── public/ # index.html, favicon, static assets
+├── public/            # index.html, favicon, static assets
 ├── src/
-│ ├── api/ # Axios & service functions
-│ ├── assets/ # images, icons
-│ ├── components/ # reusable UI components
-│ ├── contexts/ # React Contexts (Auth, Toast)
-│ ├── hooks/ # custom hooks
-│ ├── layouts/ # layout components
-│ ├── pages/ # route pages (Login, Tasks)
-│ ├── routes/ # route definitions & guards
-│ ├── types/ # TS types/interfaces
-│ ├── utils/ # helpers
-│ └── main.tsx # app entry
-├── .env.example # sample env file
+│   ├── api/           # Axios & service functions
+│   ├── assets/        # images, icons
+│   ├── components/    # reusable UI components
+│   ├── contexts/      # React Contexts (Auth, Toast)
+│   ├── hooks/         # custom hooks
+│   ├── layouts/       # layout components
+│   ├── pages/         # route pages (Login, Tasks)
+│   ├── routes/        # route definitions & guards
+│   ├── types/         # TS types/interfaces
+│   ├── utils/         # helpers
+│   └── main.tsx       # app entry
+├── .env.example       # sample env file
 ├── package.json
 ├── vite.config.ts
 └── tailwind.config.js
+```
 
 ---
 
@@ -57,3 +59,9 @@ ui/
 - Node.js ≥18, npm or yarn
 - Backend API running and accessible
 - Ports free: 5173 (dev), 80 or custom (prod)
+
+## 📞 Contact
+
+- 👤 Name: [Đoàn Văn Đạt]
+- 📧 Email: [datdoan.dev@gmail.com](mailto:datdoan.dev@gmail.com)
+- 🐙 GitHub: [@dat-dv](https://github.com/dat-dv)

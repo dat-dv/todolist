@@ -97,3 +97,9 @@ TodoList_merge/
 - [Backend (.NET Core) Documentation](./api/readme.md) – Detailed API setup, endpoints, and environment variables
 - [Frontend (React) Documentation](./ui/readme.md) – Build steps, scripts, and configuration
 - [Docker Compose Reference](https://docs.docker.com/compose/) – Advanced configuration and troubleshooting
+
+## 📞 Contact
+
+- 👤 Name: [Đoàn Văn Đạt]
+- 📧 Email: [datdoan.dev@gmail.com](mailto:datdoan.dev@gmail.com)
+- 🐙 GitHub: [@dat-dv](https://github.com/dat-dv)
