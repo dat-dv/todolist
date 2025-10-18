@@ -1,14 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import useAuth from "../../../hooks/use-auth";
-import { removeAccessToken } from "../../../utils/local-storage";
-import { PATHS } from "../../../configs/path.config";
 
 interface UserMenuProps {
   className?: string;
 }
 
 const UserMenu = ({ className = "" }: UserMenuProps) => {
-  const { user } = useAuth();
+  const { user, logOut } = useAuth();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const username = user?.username;
@@ -26,8 +24,7 @@ const UserMenu = ({ className = "" }: UserMenuProps) => {
   }, []);
 
   const handleClickLogout = () => {
-    removeAccessToken();
-    window.location.href = PATHS.HOME;
+    logOut?.();
   };
 
   if (!username) return null;

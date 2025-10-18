@@ -1,7 +1,5 @@
-import { Suspense } from "react";
 import {
   Route,
-  Outlet,
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
@@ -11,32 +9,17 @@ import { GuestGuard } from "../components/atoms/guest-guard";
 import { authRoutes } from "./auth-routes";
 import { PATHS } from "../configs/path.config";
 import NotFoundPage from "../components/page/not-found";
-import { LoadingScreen } from "../components/atoms/loading-screen";
-import { PrivateGuard } from "../components/atoms/private-guard";
 import HomePage from "../components/page/home";
+import PrivateGuard from "../components/atoms/private-guard";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      <Route
-        element={
-          <PrivateGuard>
-            <Outlet />
-          </PrivateGuard>
-        }
-      >
+      <Route element={<PrivateGuard />}>
         <Route index element={<HomePage />} />
       </Route>
 
-      <Route
-        element={
-          <Suspense fallback={<LoadingScreen />}>
-            <GuestGuard>
-              <Outlet />
-            </GuestGuard>
-          </Suspense>
-        }
-      >
+      <Route element={<GuestGuard />}>
         {authRoutes.map((item) => (
           <Route key={item.path} path={item?.path} element={item?.element} />
         ))}

@@ -12,6 +12,7 @@ import { useTriggerResgister } from "../../../hooks/user/use-trigger-register";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "./register-form.schema";
 import CustomButton from "../../atoms/custom-button";
+import axiosInstance from "../../../utils/instance";
 
 type TRegisterInputs = {
   username: string;
@@ -36,7 +37,6 @@ const RegisterForm: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<TRegisterInputs> = async (data) => {
-    // call register trigger
     const res = await triggerRegister({
       username: data.username,
       password: data.password,
@@ -44,6 +44,7 @@ const RegisterForm: React.FC = () => {
 
     if (res?.status === "success") {
       const token = res.data.token;
+      axiosInstance.defaults.headers.Authorization = `Bearer ${token}`;
       setSession(token);
       setUser?.(res.data.user);
       toast.success("Registration successful");

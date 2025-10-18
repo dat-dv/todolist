@@ -5,4 +5,5 @@ export type AuthContextType = {
   isLoggedIn: boolean;
   isLoading: boolean;
   setUser?: (user: TUser) => void;
+  logOut?: () => void;
 };

@@ -1,27 +1,22 @@
-import { LoadingScreen } from "../loading-screen";
 import { PATHS } from "../../../configs/path.config";
-import { useRouter } from "../../../hooks/use-router";
-import useAuth from "../../../hooks/use-auth";
-import { useEffect } from "react";
+import React, { Suspense } from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { LoadingScreen } from "../loading-screen";
+import { getAccessToken } from "../../../utils/local-storage";
 
-type TPrivateGuardProps = {
-  children: React.ReactNode;
-};
+const PrivateGuard: React.FC = () => {
+  const hasToken = getAccessToken();
 
-export function PrivateGuard({ children }: TPrivateGuardProps) {
-  const router = useRouter();
-
-  const { isLoading, isLoggedIn, user } = useAuth();
-
-  useEffect(() => {
-    if (!user?.username && !isLoading) {
-      router.replace(PATHS.LOGIN);
-    }
-  }, [router, isLoggedIn, isLoading, user]);
-
-  if (isLoading) {
-    return <LoadingScreen />;
+  console.log(11, hasToken);
+  if (!hasToken) {
+    return <Navigate to={PATHS.LOGIN} replace />;
   }
 
-  return children;
-}
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <Outlet />
+    </Suspense>
+  );
+};
+
+export default PrivateGuard;

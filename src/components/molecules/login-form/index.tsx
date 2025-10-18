@@ -10,6 +10,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { loginSchema, type TLoginFormData } from "./login-form.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CustomButton from "../../atoms/custom-button";
+import axiosInstance from "../../../utils/instance";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -26,13 +27,16 @@ const LoginForm = () => {
   });
 
   const onSubmit: SubmitHandler<TLoginFormData> = async (data) => {
+    delete axiosInstance.defaults.headers.Authorization;
     const res = await triggerLogin({
       username: data.username,
       password: data.password,
     });
     if (res.status === "success") {
       const token = res.data.token;
+      axiosInstance.defaults.headers.Authorization = `Bearer ${token}`;
       setSession(token);
+      console.log(11, res.data.user);
       setUser?.(res.data.user);
       toast.success("Login successful");
       router.push(PATHS.HOME);
