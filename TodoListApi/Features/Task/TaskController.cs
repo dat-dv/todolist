@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TodoListApi.Common.DTOs;
 using TodoListApi.Features.Task.DTOs;
+using TodoListApi.Common.Binders;
 
 namespace TodoListApi.Features.Task;
 
@@ -28,7 +29,10 @@ public class TaskController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<TaskResponseDto>> GetTasks([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] bool? isCompleted = null)
+    public async Task<ActionResult<TaskResponseDto>> GetTasks(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery][ModelBinder(BinderType = typeof(NullableBoolModelBinder))] bool? isCompleted = null)
     {
         var userId = GetUserId();
         var result = await _taskService.GetTasksAsync(userId, page, pageSize, isCompleted);
