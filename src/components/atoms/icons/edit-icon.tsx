@@ -1,4 +1,9 @@
-const EditIcon = ({ className = "h-4 w-4" }: { className?: string }) => (
+import type { ComponentPropsWithoutRef } from "react";
+
+const EditIcon = ({
+  className = "h-4 w-4",
+  ...rest
+}: ComponentPropsWithoutRef<"svg">) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={className}
@@ -6,6 +11,7 @@ const EditIcon = ({ className = "h-4 w-4" }: { className?: string }) => (
     fill="none"
     stroke="currentColor"
     strokeWidth={2}
+    {...rest}
   >
     <path
       strokeLinecap="round"
