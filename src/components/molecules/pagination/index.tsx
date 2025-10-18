@@ -1,30 +1,38 @@
+import React from "react";
+import PaginationItem from "./pagination-item";
+import CustomSelect from "../custom-select";
+import { PAGINATION_SIZE_OPTIONS } from "../../../configs/pagination.config";
 import type { TPaginationProps } from "./pagination.type";
 
-const Pagination = ({
+const Pagination: React.FC<TPaginationProps> = ({
   currentPage,
   totalPages,
   onPageChange,
+  onChangePageSize,
+  pageSize,
+  hasPrev = true,
+  hasNext = true,
   className = "",
-  hasNext,
-  hasPrev,
-}: TPaginationProps) => {
+  selectProps,
+}) => {
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
 
     // Mobile: Show fewer pages
     if (typeof window !== "undefined" && window.innerWidth < 640) {
       if (totalPages <= 5) {
-        return Array.from({ length: totalPages }, (_, i) => i + 1);
+        for (let i = 1; i <= totalPages; i++) {
+          pages.push(i);
+        }
+        return pages;
       }
 
-      // Always show first page
       pages.push(1);
 
       if (currentPage > 3) {
         pages.push("...");
       }
 
-      // Show pages around current
       for (
         let i = Math.max(2, currentPage - 1);
         i <= Math.min(totalPages - 1, currentPage + 1);
@@ -39,7 +47,6 @@ const Pagination = ({
         pages.push("...");
       }
 
-      // Always show last page
       if (totalPages > 1) {
         pages.push(totalPages);
       }
@@ -49,7 +56,10 @@ const Pagination = ({
 
     // Desktop: Show more pages
     if (totalPages <= 7) {
-      return Array.from({ length: totalPages }, (_, i) => i + 1);
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+      return pages;
     }
 
     pages.push(1);
@@ -78,87 +88,84 @@ const Pagination = ({
   const pages = getPageNumbers();
 
   return (
-    <div
-      className={`flex items-center justify-center gap-1 xs:gap-2 mt-4 sm:mt-6 px-2 ${className}`}
-    >
-      {hasPrev && (
-        <button
-          onClick={() => onPageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="
-            px-2 xs:px-3 py-1.5 xs:py-2 
-            text-xs xs:text-sm
-            rounded-md 
-            bg-gray-200 hover:bg-gray-300 
-            disabled:opacity-50 disabled:cursor-not-allowed
-            flex-shrink-0
-            transition-colors
-          "
-          aria-label="Previous page"
-        >
-          <span className="hidden xs:inline">Previous</span>
-          <span className="inline xs:hidden">Prev</span>
-        </button>
-      )}
-
-      <div className="flex items-center gap-1 xs:gap-2 overflow-x-auto max-w-full scrollbar-hide">
-        {pages.map((page, index) => {
-          if (page === "...") {
-            return (
-              <span
-                key={`ellipsis-${index}`}
-                className="px-2 xs:px-3 py-1 text-gray-500 flex-shrink-0"
-              >
-                ...
-              </span>
-            );
-          }
-
-          return (
-            <button
-              key={page}
-              onClick={() => onPageChange(page as number)}
-              className={`
-                px-2.5 xs:px-3.5 
-                py-1 xs:py-1.5
-                text-xs xs:text-sm
-                rounded-md 
-                flex-shrink-0
-                transition-colors
-                min-w-[32px] xs:min-w-[36px]
-                ${
-                  currentPage === page
-                    ? "bg-primary text-white font-semibold"
-                    : "bg-gray-200 hover:bg-gray-300"
-                }
-              `}
-              aria-label={`Page ${page}`}
-              aria-current={currentPage === page ? "page" : undefined}
+    <div className={`space-y-3 sm:space-y-4 w-full ${className}`}>
+      {/* Page Navigation */}
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-2 w-full">
+        {/* Page buttons row */}
+        <div className="flex items-center justify-center gap-1 xs:gap-2 w-full sm:w-auto">
+          {hasPrev && (
+            <PaginationItem
+              onClick={() => onPageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              aria-label="Previous page"
+              className="flex-shrink-0"
             >
-              {page}
-            </button>
-          );
-        })}
-      </div>
+              <span className="hidden xs:inline">Previous</span>
+              <span className="inline xs:hidden">Prev</span>
+            </PaginationItem>
+          )}
 
-      {hasNext && (
-        <button
-          onClick={() => onPageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="
-            px-2 xs:px-3 py-1.5 xs:py-2 
-            text-xs xs:text-sm
-            rounded-md 
-            bg-gray-200 hover:bg-gray-300 
-            disabled:opacity-50 disabled:cursor-not-allowed
-            flex-shrink-0
-            transition-colors
-          "
-          aria-label="Next page"
-        >
-          Next
-        </button>
-      )}
+          <div className="flex items-center gap-1 xs:gap-2 overflow-x-auto max-w-full scrollbar-hide">
+            {pages.map((page, index) => {
+              if (page === "...") {
+                return (
+                  <span
+                    key={`ellipsis-${index}`}
+                    className="px-2 xs:px-3 py-1 text-gray-500 flex-shrink-0 text-xs xs:text-sm"
+                  >
+                    ...
+                  </span>
+                );
+              }
+
+              return (
+                <PaginationItem
+                  key={page}
+                  onClick={() => onPageChange(page as number)}
+                  className={`
+                    px-2.5 xs:px-3.5 
+                    py-1 xs:py-1.5
+                    text-xs xs:text-sm
+                    min-w-[32px] xs:min-w-[36px]
+                    flex-shrink-0
+                    ${
+                      currentPage === page
+                        ? "bg-primary text-white font-semibold"
+                        : "bg-gray-200 hover:bg-gray-300"
+                    }
+                  `}
+                  aria-label={`Page ${page}`}
+                  aria-current={currentPage === page ? "page" : undefined}
+                >
+                  {page}
+                </PaginationItem>
+              );
+            })}
+          </div>
+
+          {hasNext && (
+            <PaginationItem
+              onClick={() => onPageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              aria-label="Next page"
+              className="flex-shrink-0"
+            >
+              Next
+            </PaginationItem>
+          )}
+        </div>
+
+        {/* CustomSelect - separate row on mobile */}
+        <div className="w-full sm:w-auto flex justify-center mt-3 sm:mt-0 sm:justify-start">
+          <CustomSelect<number>
+            value={pageSize}
+            onChange={onChangePageSize}
+            options={PAGINATION_SIZE_OPTIONS}
+            label={selectProps?.label || "Items per page"}
+            className="w-fit max-w-[200px] sm:max-w-none sm:w-auto"
+          />
+        </div>
+      </div>
     </div>
   );
 };

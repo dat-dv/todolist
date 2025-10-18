@@ -9,6 +9,10 @@ import { useUpdateTask } from "../../../hooks/task/use-toggle-task";
 import { useCreateTask } from "../../../hooks/task/use-create-task";
 import Pagination from "../pagination";
 import ConfirmDeleteDialog from "../confirm-dialog-delete";
+import {
+  PAGINATION,
+  PAGINATION_SIZE_OPTIONS,
+} from "../../../configs/pagination.config";
 
 const TodoList = () => {
   const [idTaskEdited, setTaskIdEdited] = useState<number | undefined>(
@@ -22,7 +26,10 @@ const TodoList = () => {
     todoTitle: null,
   });
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [pagination, setPagination] = useState({
+    page: PAGINATION.DEFAULT_PAGE,
+    pageSize: PAGINATION.DEFAULT_PAGE_SIZE,
+  });
 
   const { trigger: trigerCreatTask, isMutating: isCreating } = useCreateTask({
     shouldFetch: true,
@@ -40,14 +47,14 @@ const TodoList = () => {
   const { data: tasskRes, mutate: revalidateTasks } = useGetTasks({
     shouldFetch: true,
     params: {
-      page: currentPage,
-      limit: 10,
+      page: pagination.page,
+      limit: pagination.pageSize,
     },
   });
 
   const {
     value: todos = [],
-    totalPages = 1,
+    totalPages = PAGINATION.DEFAULT_PAGE,
     hasNextPage,
     hasPreviousPage,
   } = tasskRes || {};
@@ -84,7 +91,6 @@ const TodoList = () => {
   const handleSubmitTodo = async (task: Partial<TTask>) => {
     const isEdit = !!task?.id;
 
-    console.log(11, task);
     if (isEdit) {
       handleEditTask(task);
     } else {
@@ -134,6 +140,14 @@ const TodoList = () => {
     toast.success("Todo removed successfully");
   };
 
+  const handleChangePage = (page: number) => {
+    setPagination({ ...pagination, page });
+  };
+
+  const handleChangePageSize = (pageSize: number) => {
+    setPagination({ ...pagination, pageSize });
+  };
+
   return (
     <div>
       <div className="max-w-fit mx-auto">
@@ -158,11 +172,16 @@ const TodoList = () => {
         ))}
       </div>
       <Pagination
-        currentPage={currentPage}
+        currentPage={pagination.page}
         totalPages={totalPages}
-        onPageChange={setCurrentPage}
+        onPageChange={handleChangePage}
         hasNext={hasNextPage}
         hasPrev={hasPreviousPage}
+        pageSize={pagination.pageSize}
+        onChangePageSize={handleChangePageSize}
+        selectProps={{
+          options: PAGINATION_SIZE_OPTIONS,
+        }}
       />
       <ConfirmDeleteDialog
         isOpen={deleteDialog.todoId !== null}
