@@ -1,4 +1,3 @@
-import React from "react";
 import type { TTodoItemProps } from "./todo-item.type";
 import DeleteIcon from "../../../atoms/icons/delete-icon";
 import CheckIcon from "../../../atoms/icons/check-icon";

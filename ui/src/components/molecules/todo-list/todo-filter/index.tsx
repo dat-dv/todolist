@@ -1,4 +1,3 @@
-import React from "react";
 import CustomSelect from "../../custom-select";
 import type { TTodoFilterProps } from "./todo-filter.type";
 import { EFIlterValue } from "../../../../types/filter.enum";

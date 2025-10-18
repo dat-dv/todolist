@@ -1,4 +1,3 @@
-import React from "react";
 import type { TConfirmDeleteDialogProps } from "./confirm-dialog-delete.type";
 import Dialog from "../dialog";
 import LoadingIcon from "../../atoms/icons/loading-icon";

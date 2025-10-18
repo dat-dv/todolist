@@ -1,5 +1,3 @@
-import React from "react";
-
 type TButtonWrapperProps = {
   onClick?: () => void;
   disabled?: boolean;

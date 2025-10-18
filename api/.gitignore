@@ -61,3 +61,4 @@ Thumbs.db
 **/appsettings.*.json
 **/appsettings.json
 secrets.json
+.env

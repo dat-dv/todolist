@@ -1,4 +1,3 @@
-import React from "react";
 import type { TCustomSelectProps } from "./custom-select.type";
 import ArrowDownIcon from "../../atoms/icons/arrow-down-icon";
 

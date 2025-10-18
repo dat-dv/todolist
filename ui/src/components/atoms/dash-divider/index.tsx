@@ -1,4 +1,4 @@
-import React from "react";
+import { useId } from "react";
 
 export type DashedDividerProps = React.HTMLAttributes<HTMLDivElement> & {
   maxWidth?: string;
@@ -35,8 +35,7 @@ const DashedDivider: React.FC<DashedDividerProps> = ({
   const viewH = Math.max(2, thickness);
   const center = viewW / 2;
 
-  const uid =
-    React.useId?.() ?? `dashed-${Math.random().toString(36).slice(2, 9)}`;
+  const uid = useId?.() ?? `dashed-${Math.random().toString(36).slice(2, 9)}`;
   const maskId = `fadeMask-${uid}`;
   const baseGradId = `baseGrad-${uid}`;
   const fadeGradId = `fadeGrad-${uid}`;

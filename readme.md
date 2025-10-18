@@ -1,30 +1,41 @@
 🚀 How to Run Docker for Each Project
 
-# 1. 🧩 TodoListApi (Backend)
-
-To run the backend API, follow these steps:
-
 ```bash
-cd TodoListApi
+# Tạo .env mới từ .env.be và .env.fe
+rm -f .env
+cat .env.be .env.fe > .env
 
-# Build image and run
-docker-compose up -d --build
+# Copy vào folders
+cp .env.fe ./ui/.env
+cp .env.be ./api/.env
+## Build & Run
+docker compose up -d --build
 
-Swagger UI: http://localhost:5266/index.html
-# Note: If you cannot access Swagger UI, try using a private/incognito browser window. Some browsers may cache old responses or have CORS issues.
 ```
 
-# 2. 💻 TodoListUi (Frontend)
-
-To run the frontend UI, follow these steps:
-
-### Build and run with Docker
+### For Any Issue
 
 ```bash
-cd TodoListUi
+# Stop và xóa containers, networks, volumes của project này
+docker compose down -v
 
-# Build image
-docker-compose up -d
+# Xóa containers nếu còn sót
+docker rm -f todolist_mysql todolist_backend todolist_frontend 2>/dev/null
+
+# Xóa volumes cụ thể
+docker volume rm todolistapi_mysql_data 2>/dev/null
+
+# Xóa network cụ thể
+docker network rm todolistapi_network 2>/dev/null
+
 ```
 
-> Access app at http://localhost:3000
+## Rebuild From Scratch
+
+```bash
+# Cleanup + rebuild
+docker compose down -v && \
+docker rm -f todolist_mysql todolist_backend todolist_frontend 2>/dev/null && \
+docker volume rm todolistapi_mysql_data 2>/dev/null && \
+docker compose up -d --build
+```

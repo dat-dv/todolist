@@ -1,4 +1,3 @@
-import React from "react";
 import PaginationItem from "./pagination-item";
 import CustomSelect from "../custom-select";
 import { PAGINATION_SIZE_OPTIONS } from "../../../configs/pagination.config";

@@ -47,7 +47,7 @@ docker-compose up -d --build
 
 ### Access the API
 
-Swagger UI: http://localhost:5266/index.html
+Swagger UI: http://localhost:5366/index.html
 `# Note: If you cannot access Swagger UI, try using a private/incognito browser window. Some browsers may cache old responses or have CORS issues.`
 
 ### Stop the Application
@@ -60,24 +60,25 @@ docker-compose down
 # Stop and remove all data (including database)
 docker-compose down -v
 ```
+
 # 📚 API Endpoints
 
 ## 🔐 Authentication
 
-| Method | Endpoint | Description | Auth Required |
-|:-------|:----------|:-------------|:--------------:|
-| **POST** | `/api/auth/register` | Register new user | ❌ |
-| **POST** | `/api/auth/login` | Login user | ❌ |
-| **GET**  | `/api/auth/me` | Get current user info | ✅ |
+| Method   | Endpoint             | Description           | Auth Required |
+| :------- | :------------------- | :-------------------- | :-----------: |
+| **POST** | `/api/auth/register` | Register new user     |      ❌       |
+| **POST** | `/api/auth/login`    | Login user            |      ❌       |
+| **GET**  | `/api/auth/me`       | Get current user info |      ✅       |
 
 ---
 
 ## ✅ Tasks
 
-| Method | Endpoint | Description | Auth Required |
-|:-------|:----------|:-------------|:--------------:|
-| **GET** | `/api/task` | Get all user's tasks | ✅ |
-| **GET** | `/api/task/{id}` | Get task by ID | ✅ |
-| **POST** | `/api/task` | Create new task | ✅ |
-| **PUT** | `/api/task/{id}` | Update task | ✅ |
-| **DELETE** | `/api/task/{id}` | Delete task | ✅ |
+| Method     | Endpoint         | Description          | Auth Required |
+| :--------- | :--------------- | :------------------- | :-----------: |
+| **GET**    | `/api/task`      | Get all user's tasks |      ✅       |
+| **GET**    | `/api/task/{id}` | Get task by ID       |      ✅       |
+| **POST**   | `/api/task`      | Create new task      |      ✅       |
+| **PUT**    | `/api/task/{id}` | Update task          |      ✅       |
+| **DELETE** | `/api/task/{id}` | Delete task          |      ✅       |

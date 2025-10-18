@@ -1,5 +1,3 @@
-// SimpleLayout.tsx
-import React from "react";
 import type { TSimpleLayoutProps } from "./simple-layout.type";
 import UserMenu from "../../molecules/user-menu";
 import Footer from "../../molecules/footer";
