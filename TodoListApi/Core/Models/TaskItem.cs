@@ -6,7 +6,7 @@ namespace TodoListApi.Core.Models
     public class Task : BaseEntity
     {
         [Required]
-        [StringLength(100, MinimumLength = 1)]
+        [StringLength(255, MinimumLength = 1)]
         public string Title { get; set; } = string.Empty;
 
         public bool IsCompleted { get; set; } = false;

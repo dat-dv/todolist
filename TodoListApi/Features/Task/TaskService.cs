@@ -14,10 +14,13 @@ public class TaskService : ITaskService
         _context = context;
     }
 
-    public async Task<PagedResultDto<TaskResponseDto>> GetTasksAsync(int userId, int page = 1, int pageSize = 10)
+    public async Task<PagedResultDto<TaskResponseDto>> GetTasksAsync(int userId, int page = 1, int pageSize = 10, bool? isCompleted = null)
     {
         var query = _context.Tasks.Where(t => t.UserId == userId && t.DeletedAt == null);
-
+        if (isCompleted.HasValue)
+        {
+            query = query.Where(t => t.IsCompleted == isCompleted.Value);
+        }
         var totalCount = await query.CountAsync();
 
         var items = await query

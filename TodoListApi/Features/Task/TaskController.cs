@@ -28,10 +28,10 @@ public class TaskController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<TaskResponseDto>> GetTasks([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<ActionResult<TaskResponseDto>> GetTasks([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] bool? isCompleted = null)
     {
         var userId = GetUserId();
-        var result = await _taskService.GetTasksAsync(userId, page, pageSize);
+        var result = await _taskService.GetTasksAsync(userId, page, pageSize, isCompleted);
         return Ok(result);
     }
 
