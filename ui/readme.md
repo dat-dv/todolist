@@ -1,66 +1,59 @@
-# Todo List UI
+# 🚀 Todo List UI
 
-A modern, responsive Todo List application built with React, TypeScript, and Tailwind CSS.
+A modern, responsive Todo List frontend built with React, TypeScript and Vite.  
+Connects to a .NET Core backend API for user authentication and task management.
 
-## Features
+---
 
-- ✅ Create, read, update, and delete todos
-- 🔐 User authentication (login/register)
-- ✏️ Inline editing of tasks
-- ✔️ Mark tasks as complete/incomplete
-- 📱 Fully responsive design
-- 🎨 Clean UI with Tailwind CSS
-- 🔒 Protected routes with authentication guards
+## ✨ Features
 
-## Tech Stack
+- ✅ Full CRUD for todos
+- 🔐 JWT-protected routes (login / register)
+- ✏️ Inline editing & task status toggles
+- 📱 Mobile-first responsive design
+- 🎨 Styled with Tailwind CSS
+- 🚀 Vite for instant HMR & fast builds
 
-- **React 18** - UI library
-- **TypeScript** - Type safety
-- **Vite** - Build tool
-- **Tailwind CSS** - Styling
-- **React Router** - Navigation
-- **React Hook Form** - Form handling
-- **Zod** - Schema validation
-- **SWR** - Data fetching
-- **Axios** - HTTP client
-- **React Toastify** - Notifications
+---
 
-## Getting Started
+## 📚 Project Structure
 
-### Project Structure
+ui/
+├── public/ # index.html, favicon, static assets
+├── src/
+│ ├── api/ # Axios & service functions
+│ ├── assets/ # images, icons
+│ ├── components/ # reusable UI components
+│ ├── contexts/ # React Contexts (Auth, Toast)
+│ ├── hooks/ # custom hooks
+│ ├── layouts/ # layout components
+│ ├── pages/ # route pages (Login, Tasks)
+│ ├── routes/ # route definitions & guards
+│ ├── types/ # TS types/interfaces
+│ ├── utils/ # helpers
+│ └── main.tsx # app entry
+├── .env.example # sample env file
+├── package.json
+├── vite.config.ts
+└── tailwind.config.js
 
-```
-src/
-├── components/
-│   ├── atoms/         # Small reusable components
-│   ├── molecules/     # Composite components
-│   ├── organisms/     # Complex components
-│   ├── page/          # Page components
-│   └── layouts/       # Layout components
-├── configs/           # Configuration files
-├── hooks/             # Custom React hooks
-├── routes/            # Route definitions
-├── types/             # TypeScript types
-└── utils/             # Utility functions
-```
+---
 
-### Prerequisites
+## 🛠️ Tech Stack
 
-- Node.js 18+
-- npm or yarn
+- React 18 + TypeScript
+- Vite (ESM)
+- Tailwind CSS
+- React Router v6
+- React Hook Form + Zod
+- SWR for data fetching
+- Axios HTTP client
+- React Toastify notifications
 
-### Quick start
+---
 
-```bash
-npm install
-npm run build
-npm run start
-```
+## 📋 Prerequisites
 
-### Build and run with Docker
-
-```bash
-# Build image
-docker-compose up -d
-# Access app at http://localhost:3000
-```
+- Node.js ≥18, npm or yarn
+- Backend API running and accessible
+- Ports free: 5173 (dev), 80 or custom (prod)

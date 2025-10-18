@@ -28,38 +28,7 @@ Perfect for learning modern ASP.NET Core development or as a starter template fo
 - 🛡️ **Global Exception Handling** - Consistent error responses
 - ✨ **Input Validation** - Comprehensive request validation
 
-## 🚀 Quick Start with Docker Compose
-
-The easiest way to get started is using Docker Compose, which will set up both the API and MySQL database automatically.
-
-### Prerequisites
-
-- Docker Desktop (Windows/Mac) or Docker Engine + Docker Compose (Linux)
-- Git
-
-### Start the Application
-
-```bash
-# From root project run
-# Start all services in detached mode
-docker-compose up -d --build
-```
-
-### Access the API
-
-Swagger UI: http://localhost:5366/index.html
-`# Note: If you cannot access Swagger UI, try using a private/incognito browser window. Some browsers may cache old responses or have CORS issues.`
-
-### Stop the Application
-
-```bash
-# From root project run
-# Stop all services
-docker-compose down
-
-# Stop and remove all data (including database)
-docker-compose down -v
-```
+### ✨ Access the API
 
 # 📚 API Endpoints
 
