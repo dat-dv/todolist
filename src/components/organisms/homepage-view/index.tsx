@@ -5,7 +5,7 @@ import TodoList from "../../molecules/todo-list";
 const HomePage = () => {
   return (
     <SimpleLayout>
-      <MainTitle title="To-Do List" className="text-center mb-10" />
+      <MainTitle title="To-Do List" className="text-center mb-16" />
       <TodoList />
     </SimpleLayout>
   );

@@ -5,8 +5,8 @@ import RegisterForm from "../../molecules/register-form";
 const RegisterView = () => {
   return (
     <SimpleLayout>
-      <MainTitle title="Register" className="text-center mb-10" />
-      <RegisterForm />
+      <MainTitle title="Register" className="text-center mb-16" />
+      <RegisterForm className="max-w-md mx-auto" />
     </SimpleLayout>
   );
 };

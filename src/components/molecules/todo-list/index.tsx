@@ -38,11 +38,11 @@ const TodoList = () => {
   const { trigger: triggerDeleteTask, isMutating: isDeleting } = useDeleteTask({
     shouldFetch: true,
   });
-  const { trigger: triggerUpdateTask, isMutating: isUpdating } = useUpdateTask({
+  const { trigger: triggerUpdateTask } = useUpdateTask({
     shouldFetch: true,
   });
 
-  const isSubmitting = isUpdating || isCreating;
+  const isSubmitting = isCreating;
 
   const { data: tasskRes, mutate: revalidateTasks } = useGetTasks({
     shouldFetch: true,

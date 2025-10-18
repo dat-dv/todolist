@@ -11,8 +11,12 @@ import { loginSchema, type TLoginFormData } from "./login-form.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CustomButton from "../../atoms/custom-button";
 import axiosInstance from "../../../utils/instance";
+import type { ComponentPropsWithoutRef } from "react";
 
-const LoginForm = () => {
+const LoginForm = ({
+  className,
+  ...rest
+}: ComponentPropsWithoutRef<"form">) => {
   const router = useRouter();
   const { setUser } = useAuth();
   const { trigger: triggerLogin } = useTriggerLogin({ shouldFetch: true });
@@ -45,7 +49,11 @@ const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className={`${className} space-y-4`}
+      {...rest}
+    >
       <div className="flex flex-col space-y-6">
         <CustomInput
           label="Account"

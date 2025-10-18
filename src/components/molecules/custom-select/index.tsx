@@ -27,22 +27,25 @@ const CustomSelect = <T extends string | number = string | number>({
           className="
             appearance-none
             px-3 sm:px-4 
-            py-1.5 sm:py-2
+            py-1.5 
             pr-8 sm:pr-10
             text-xs sm:text-sm
             font-medium
-            border border-gray-200
-            rounded-md
+            border-2 border-gray-300 
+            rounded-[6px]
             bg-white 
-            text-gray-700
-            hover:border-primary/60
+            hover:border-primary
             focus:outline-none 
+            focus:ring-2 
+            focus:ring-primary
             focus:border-primary
-            transition-colors duration-150
+            transition-all
             cursor-pointer
+            shadow-sm
+            hover:shadow-md
             disabled:opacity-50
             disabled:cursor-not-allowed
-            disabled:hover:border-gray-200
+            disabled:hover:border-gray-300
           "
         >
           {placeholder && (
@@ -58,7 +61,7 @@ const CustomSelect = <T extends string | number = string | number>({
         </select>
 
         <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-          <ArrowDownIcon className="w-4 h-4 text-gray-400" />
+          <ArrowDownIcon />
         </div>
       </div>
     </div>

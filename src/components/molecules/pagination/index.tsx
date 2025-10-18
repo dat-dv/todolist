@@ -156,15 +156,17 @@ const Pagination: React.FC<TPaginationProps> = ({
         </div>
 
         {/* CustomSelect - separate row on mobile */}
-        <div className="w-full sm:w-auto flex justify-center mt-3 sm:mt-0 sm:justify-start">
-          <CustomSelect<number>
-            value={pageSize}
-            onChange={onChangePageSize}
-            options={PAGINATION_SIZE_OPTIONS}
-            label={selectProps?.label || "Items per page"}
-            className="w-fit max-w-[200px] sm:max-w-none sm:w-auto"
-          />
-        </div>
+        {!!pages?.length && (
+          <div className="w-full sm:w-auto flex justify-center mt-3 sm:mt-0 sm:justify-start">
+            <CustomSelect<number>
+              value={pageSize}
+              onChange={onChangePageSize}
+              options={PAGINATION_SIZE_OPTIONS}
+              label={selectProps?.label || "Items per page"}
+              className="text-xs sm:text-sm"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -5,8 +5,8 @@ import LoginForm from "../../molecules/login-form";
 const LoginView = () => {
   return (
     <SimpleLayout>
-      <MainTitle title="Login" className="text-center mb-10" />
-      <LoginForm />
+      <MainTitle title="Login" className="text-center mb-16" />
+      <LoginForm className="max-w-md mx-auto" />
     </SimpleLayout>
   );
 };

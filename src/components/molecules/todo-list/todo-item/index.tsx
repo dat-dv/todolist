@@ -73,7 +73,7 @@ const TodoItem: React.FC<TTodoItemProps> = ({
       ${isCompleted ? "line-through text-gray-400" : "text-gray-900"}
     `}
       >
-        <div className="break-words whitespace-pre-wrap overflow-wrap-anywhere">
+        <div className="mt-1.5 break-words whitespace-pre-wrap overflow-wrap-anywhere">
           {title}
         </div>
       </div>

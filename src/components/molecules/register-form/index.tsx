@@ -1,4 +1,3 @@
-import React from "react";
 import useAuth from "../../../hooks/use-auth";
 import { setSession } from "../../../utils/local-storage";
 import { useRouter } from "../../../hooks/use-router";
@@ -13,14 +12,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "./register-form.schema";
 import CustomButton from "../../atoms/custom-button";
 import axiosInstance from "../../../utils/instance";
+import type { TRegisterFormProps, TRegisterInputs } from "./register-form.type";
 
-type TRegisterInputs = {
-  username: string;
-  password: string;
-  confirmPassword: string;
-};
-
-const RegisterForm: React.FC = () => {
+const RegisterForm = ({ className, ...rest }: TRegisterFormProps) => {
   const router = useRouter();
   const { setUser } = useAuth();
   const { trigger: triggerRegister } = useTriggerResgister({
@@ -50,12 +44,16 @@ const RegisterForm: React.FC = () => {
       toast.success("Registration successful");
       router.push(PATHS.HOME);
     } else {
-      toast.error(res?.error?.message || "Registration failed");
+      toast.error(res?.error?.title || "Registration failed");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className={`${className} space-y-4`}
+      {...rest}
+    >
       <div className="flex flex-col space-y-6">
         <CustomInput
           label="Username"
