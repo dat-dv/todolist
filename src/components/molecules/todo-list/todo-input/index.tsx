@@ -1,17 +1,16 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import CustomInput from "../../custom-input";
 import CustomButton from "../../../atoms/custom-button";
 import { todoSchema, type TTodoInputData } from "./todo-input.schema";
 import { useEffect } from "react";
 import type { TTodoInputProps } from "./todo-input.type";
 import PlusIcon from "../../../atoms/icons/plus-icon";
+import CustomTextarea from "../../custom-textarea";
 
 const TodoInput: React.FC<TTodoInputProps> = ({
   onAdd,
   placeholder = "Input Text",
   disabled = false,
-  maxWidth = "780px",
   isSubmitting = false,
   task,
   isEdited,
@@ -43,27 +42,18 @@ const TodoInput: React.FC<TTodoInputProps> = ({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="
-        w-full 
-        max-w-full
-        flex items-center 
-        gap-2 xs:gap-3 sm:gap-4 
-        mb-4 xs:mb-6 sm:mb-8
-      "
-      style={{
-        maxWidth:
-          typeof window !== "undefined" && window.innerWidth >= 640
-            ? maxWidth
-            : "100%",
-        boxSizing: "border-box",
-      }}
+      className="w-full max-w-full flex items-center gap-2 xs:gap-3 sm:gap-4 mb-4 xs:mb-6 sm:mb-8"
     >
-      <div className="relative flex-1 min-w-0">
-        <CustomInput
+      <div className="relative flex-1 min-w-full sm:min-w-[500px]">
+        <CustomTextarea
+          className="max-h-48"
+          {...register("task")}
           id="task"
           placeholder={placeholder}
-          {...register("task")}
           error={errors.task?.message}
+          disabled={disabled}
+          showCharCount
+          maxLength={255}
         />
       </div>
 
