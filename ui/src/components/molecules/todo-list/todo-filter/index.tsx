@@ -24,18 +24,11 @@ const SORT_ORDER_OPTIONS = [
 const TodoFilter: React.FC<TTodoFilterProps> = ({
   filter,
   onFilterChange,
-  totalCount,
-  activeCount,
-  completedCount,
+  totalCount = 0,
 }) => {
   const [searchInput, setSearchInput] = useState(filter.search || "");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const debouncedSearch = useDebounce(searchInput, 300);
-
-  const isCompleted = filter.isCompleted === EFIlterValue.COMPLETED;
-  const isDoing = filter.isCompleted !== EFIlterValue.NOT_COMPLETE;
-  const isAllStatus = filter.isCompleted === EFIlterValue.ALL;
-  const isTodo = isCompleted || isAllStatus;
 
   useEffect(() => {
     onFilterChange({ search: debouncedSearch });
@@ -55,22 +48,6 @@ const TodoFilter: React.FC<TTodoFilterProps> = ({
       <div className="w-full flex items-center justify-between gap-4 mb-6 pb-4 border-b border-gray-200">
         <div className="flex flex-wrap items-center gap-3 text-sm">
           <StatsBadge label="Total" value={totalCount} color="primary" />
-          {isTodo && (
-            <>
-              <div className="w-px h-4 bg-gray-300"></div>
-              <StatsBadge label="Todo" value={activeCount} color="blue" />
-            </>
-          )}
-          {isDoing && (
-            <>
-              <div className="w-px h-4 bg-gray-300"></div>
-              <StatsBadge
-                label="Completed"
-                value={completedCount}
-                color="green"
-              />
-            </>
-          )}
         </div>
 
         {/* Filter Button */}

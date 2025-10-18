@@ -66,6 +66,7 @@ const TodoList = () => {
     totalPages = PAGINATION.DEFAULT_PAGE,
     hasNextPage,
     hasPreviousPage,
+    count,
   } = tasskRes || {};
 
   const editedTask = useMemo(() => {
@@ -164,18 +165,12 @@ const TodoList = () => {
     setFilters({ ...filters, ...data });
   };
 
-  const totalCount = todos.length;
-  const activeCount = todos.filter((todo) => !todo.isCompleted).length;
-  const completedCount = todos.filter((todo) => todo.isCompleted).length;
-
   return (
     <div>
       <TodoFilter
         filter={filters}
         onFilterChange={handleChangeFilter}
-        totalCount={totalCount}
-        activeCount={activeCount}
-        completedCount={completedCount}
+        totalCount={count}
       />
       <TodoInput
         onAdd={handleSubmitTodo}
