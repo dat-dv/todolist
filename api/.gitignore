@@ -1,0 +1,63 @@
+## .NET Core
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.log
+
+## Visual Studio
+.vs/
+*.rsuser
+*.userosscache
+*.sln.docstates
+
+## Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## NuGet
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Docker & Environment
+.env
+docker-compose.override.yml
+
+## Database
+*.db
+*.db-shm
+*.db-wal
+
+## OS files
+.DS_Store
+Thumbs.db
+
+## IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+## User secrets
+**/appsettings.Development.json
+**/appsettings.*.json
+**/appsettings.json
+secrets.json
