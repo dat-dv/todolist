@@ -44,7 +44,7 @@ const RegisterForm = ({ className, ...rest }: TRegisterFormProps) => {
       toast.success("Registration successful");
       router.push(PATHS.HOME);
     } else {
-      toast.error(res?.error?.title || "Registration failed");
+      toast.error(res?.error?.message || "Registration failed");
     }
   };
 

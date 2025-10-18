@@ -15,7 +15,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const shouldFetch = checkShouldFetch();
   const router = useRouter();
 
-  const { data: profile, mutate } = useGetMyProfile({
+  const {
+    data: profile,
+    mutate,
+    isLoading,
+  } = useGetMyProfile({
     shouldFetch,
   });
 
@@ -26,20 +30,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logOut = () => {
     delete axiosInstance.defaults.headers.Authorization;
     removeAccessToken();
-    mutate({} as TUser, false);
+    mutate(undefined, false);
     router.push(PATHS.LOGIN);
   };
 
   const context = useMemo<AuthContextType>(
     () =>
       ({
-        user: profile,
-        isLoggedIn: !!profile?.username,
-        isLoading: shouldFetch,
+        user: shouldFetch ? profile : {},
+        isLoggedIn: shouldFetch ? !!profile?.username : false,
+        isLoading: shouldFetch && isLoading,
         setUser,
         logOut,
       } as AuthContextType),
-    [logOut, setUser, shouldFetch, profile]
+    [shouldFetch, profile, isLoading, setUser, logOut]
   );
 
   return (
