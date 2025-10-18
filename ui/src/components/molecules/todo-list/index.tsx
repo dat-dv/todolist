@@ -1,0 +1,220 @@
+import { useMemo, useState } from "react";
+import TodoInput from "./todo-input";
+import type { TTask } from "../../../types/entities/task.entity";
+import { toast } from "react-toastify";
+import TodoItem from "./todo-item";
+import { useGetTasks } from "../../../hooks/task/use-get-tasks";
+import { useDeleteTask } from "../../../hooks/task/use-delete-task";
+import { useUpdateTask } from "../../../hooks/task/use-toggle-task";
+import { useCreateTask } from "../../../hooks/task/use-create-task";
+import Pagination from "../pagination";
+import ConfirmDeleteDialog from "../confirm-dialog-delete";
+import {
+  PAGINATION,
+  PAGINATION_SIZE_OPTIONS,
+} from "../../../configs/pagination.config";
+import TodoFilter from "./todo-filter";
+import { EFIlterValue } from "../../../types/filter.enum";
+
+const TodoList = () => {
+  const [idTaskEdited, setTaskIdEdited] = useState<number | undefined>(
+    undefined
+  );
+  const [deleteDialog, setDeleteDialog] = useState<{
+    todoId: number | null;
+    todoTitle: string | null;
+  }>({
+    todoId: null,
+    todoTitle: null,
+  });
+
+  const [query, setQuery] = useState({
+    page: PAGINATION.DEFAULT_PAGE,
+    pageSize: PAGINATION.DEFAULT_PAGE_SIZE,
+    isCompleted: EFIlterValue.ALL,
+  });
+
+  const { trigger: trigerCreatTask, isMutating: isCreating } = useCreateTask({
+    shouldFetch: true,
+  });
+
+  const { trigger: triggerDeleteTask, isMutating: isDeleting } = useDeleteTask({
+    shouldFetch: true,
+  });
+  const { trigger: triggerUpdateTask } = useUpdateTask({
+    shouldFetch: true,
+  });
+
+  const isSubmitting = isCreating;
+
+  const { data: tasskRes, mutate: revalidateTasks } = useGetTasks({
+    shouldFetch: true,
+    params: {
+      page: query.page,
+      pageSize: query.pageSize,
+      isCompleted: query.isCompleted,
+    },
+  });
+
+  const {
+    value: todos = [],
+    totalPages = PAGINATION.DEFAULT_PAGE,
+    hasNextPage,
+    hasPreviousPage,
+  } = tasskRes || {};
+
+  const editedTask = useMemo(() => {
+    return todos.find((todo) => todo.id === idTaskEdited);
+  }, [todos, idTaskEdited]);
+
+  const handleAddTodo = async (task: Partial<TTask>) => {
+    const res = await trigerCreatTask(task);
+    const isSuccess = res.status === "success";
+    if (!isSuccess) {
+      toast.error("Failed to create todo");
+      return;
+    }
+    toast.success("Todo created successfully");
+    revalidateTasks();
+  };
+
+  const handleEditTask = async (task: Partial<TTask>) => {
+    const res = await triggerUpdateTask({
+      ...task,
+      extendUrl: `/${task.id}`,
+    });
+    const isSuccess = res.status === "success";
+    if (!isSuccess) {
+      toast.error("Failed to update todo");
+      return;
+    }
+    toast.success("Todo updated successfully");
+    revalidateTasks();
+  };
+
+  const handleSubmitTodo = async (task: Partial<TTask>) => {
+    const isEdit = !!task?.id;
+
+    if (isEdit) {
+      handleEditTask(task);
+    } else {
+      handleAddTodo(task);
+    }
+  };
+
+  const handleOpenConfirmDelete = async (task: TTask) => {
+    setDeleteDialog({
+      todoId: task.id,
+      todoTitle: task.title,
+    });
+  };
+
+  const handleToggleTodo = async (id: number, isCompleted: boolean) => {
+    const res = await triggerUpdateTask({
+      id: id,
+      isCompleted: isCompleted,
+      extendUrl: `/${id}`,
+    });
+    if (res.status !== "success") {
+      toast.error("Failed to toggle todo");
+      return;
+    }
+    toast.success("Todo toggled successfully");
+    revalidateTasks();
+  };
+
+  const handleClickEdit = (id?: number) => {
+    setTaskIdEdited(id);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialog({ todoId: null, todoTitle: null });
+  };
+
+  const handleConfirmDelete = async () => {
+    const res = await triggerDeleteTask({
+      extendUrl: `/${deleteDialog.todoId}`,
+    });
+    if (res.status !== "success") {
+      toast.error("Failed to remove todo");
+      return;
+    }
+    revalidateTasks();
+    handleCloseDeleteDialog();
+    toast.success("Todo removed successfully");
+  };
+
+  const handleChangePage = (page: number) => {
+    setQuery({ ...query, page });
+  };
+
+  const handleChangePageSize = (pageSize: number) => {
+    setQuery({ ...query, pageSize });
+  };
+
+  const handleChangeFilter = (isCompleted: EFIlterValue) => {
+    setQuery({ ...query, isCompleted });
+  };
+
+  const totalCount = todos.length;
+  const activeCount = todos.filter((todo) => !todo.isCompleted).length;
+  const completedCount = todos.filter((todo) => todo.isCompleted).length;
+
+  return (
+    <div>
+      <TodoFilter
+        filter={query.isCompleted}
+        onFilterChange={handleChangeFilter}
+        totalCount={totalCount}
+        activeCount={activeCount}
+        completedCount={completedCount}
+      />
+      <div className="max-w-fit mx-auto">
+        <TodoInput
+          onAdd={handleSubmitTodo}
+          task={editedTask}
+          isEdited={!!idTaskEdited}
+          isSubmitting={isSubmitting}
+        />
+      </div>
+      <div className="md:max-w-[60%] max-w-full mx-auto">
+        {todos?.map((todo, index) => {
+          const todoIndex = (query.page - 1) * query.pageSize + index + 1;
+          return (
+            <TodoItem
+              className="mb-4"
+              key={todo.id}
+              onClickDelete={handleOpenConfirmDelete}
+              todo={todo}
+              title={`${todoIndex}. ${todo.title}`}
+              onToggle={handleToggleTodo}
+              handleClickEdit={handleClickEdit}
+              idTaskEdited={idTaskEdited}
+            />
+          );
+        })}
+      </div>
+      <Pagination
+        currentPage={query.page}
+        totalPages={totalPages}
+        onPageChange={handleChangePage}
+        hasNext={hasNextPage}
+        hasPrev={hasPreviousPage}
+        pageSize={query.pageSize}
+        onChangePageSize={handleChangePageSize}
+        selectProps={{
+          options: PAGINATION_SIZE_OPTIONS,
+        }}
+      />
+      <ConfirmDeleteDialog
+        isOpen={deleteDialog.todoId !== null}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        itemName={deleteDialog.todoTitle || ""}
+        isLoading={isDeleting}
+      />
+    </div>
+  );
+};
+
+export default TodoList;
