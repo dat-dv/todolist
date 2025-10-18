@@ -3,7 +3,7 @@ import type { TTask } from "../../../../types/entities/task.entity";
 
 export type TTodoItemProps = {
   todo?: TTask;
-  onRemove: (id: number) => void;
+  onClickDelete: (task: TTask) => void;
   onToggle: (id: number, isCompleted: boolean) => void;
   handleClickEdit: (id?: number) => void;
   idTaskEdited?: number | null;

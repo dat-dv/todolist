@@ -8,7 +8,7 @@ import ButtonWrapper from "../../../atoms/icons/button-wrapper-icon";
 
 const TodoItem: React.FC<TTodoItemProps> = ({
   todo,
-  onRemove,
+  onClickDelete,
   onToggle,
   handleClickEdit,
   idTaskEdited,
@@ -37,7 +37,7 @@ const TodoItem: React.FC<TTodoItemProps> = ({
     >
       <div className="flex items-start gap-2 sm:gap-3 flex-shrink-0 pt-0.5 sm:flex-row flex-col">
         <ButtonWrapper
-          onClick={() => onRemove(todo?.id)}
+          onClick={() => onClickDelete(todo)}
           disabled={disabled}
           ariaLabel="Delete"
           className="bg-red-500 hover:bg-red-600 text-white w-9 h-9 sm:w-10 sm:h-10"

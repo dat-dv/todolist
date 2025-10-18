@@ -8,18 +8,27 @@ import { useDeleteTask } from "../../../hooks/task/use-delete-task";
 import { useUpdateTask } from "../../../hooks/task/use-toggle-task";
 import { useCreateTask } from "../../../hooks/task/use-create-task";
 import Pagination from "../pagination";
+import ConfirmDeleteDialog from "../confirm-dialog-delete";
 
 const TodoList = () => {
   const [idTaskEdited, setTaskIdEdited] = useState<number | undefined>(
     undefined
   );
+  const [deleteDialog, setDeleteDialog] = useState<{
+    todoId: number | null;
+    todoTitle: string | null;
+  }>({
+    todoId: null,
+    todoTitle: null,
+  });
+
   const [currentPage, setCurrentPage] = useState(1);
 
   const { trigger: trigerCreatTask, isMutating: isCreating } = useCreateTask({
     shouldFetch: true,
   });
 
-  const { trigger: triggerDeleteTask } = useDeleteTask({
+  const { trigger: triggerDeleteTask, isMutating: isDeleting } = useDeleteTask({
     shouldFetch: true,
   });
   const { trigger: triggerUpdateTask, isMutating: isUpdating } = useUpdateTask({
@@ -83,14 +92,11 @@ const TodoList = () => {
     }
   };
 
-  const handleRemoveTodo = async (id: number) => {
-    const res = await triggerDeleteTask({ extendUrl: `/${id}` });
-    if (res.status !== "success") {
-      toast.error("Failed to remove todo");
-      return;
-    }
-    revalidateTasks();
-    toast.success("Todo removed successfully");
+  const handleOpenConfirmDelete = async (task: TTask) => {
+    setDeleteDialog({
+      todoId: task.id,
+      todoTitle: task.title,
+    });
   };
 
   const handleToggleTodo = async (id: number, isCompleted: boolean) => {
@@ -111,6 +117,23 @@ const TodoList = () => {
     setTaskIdEdited(id);
   };
 
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialog({ todoId: null, todoTitle: null });
+  };
+
+  const handleConfirmDelete = async () => {
+    const res = await triggerDeleteTask({
+      extendUrl: `/${deleteDialog.todoId}`,
+    });
+    if (res.status !== "success") {
+      toast.error("Failed to remove todo");
+      return;
+    }
+    revalidateTasks();
+    handleCloseDeleteDialog();
+    toast.success("Todo removed successfully");
+  };
+
   return (
     <div>
       <div className="max-w-fit mx-auto">
@@ -126,7 +149,7 @@ const TodoList = () => {
           <TodoItem
             className="mb-4"
             key={todo.id}
-            onRemove={handleRemoveTodo}
+            onClickDelete={handleOpenConfirmDelete}
             todo={todo}
             onToggle={handleToggleTodo}
             handleClickEdit={handleClickEdit}
@@ -140,6 +163,13 @@ const TodoList = () => {
         onPageChange={setCurrentPage}
         hasNext={hasNextPage}
         hasPrev={hasPreviousPage}
+      />
+      <ConfirmDeleteDialog
+        isOpen={deleteDialog.todoId !== null}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        itemName={deleteDialog.todoTitle || ""}
+        isLoading={isDeleting}
       />
     </div>
   );
