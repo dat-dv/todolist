@@ -95,6 +95,7 @@ const TodoList = () => {
     }
     toast.success("Todo updated successfully");
     revalidateTasks();
+    setTaskIdEdited(undefined);
   };
 
   const handleSubmitTodo = async (task: Partial<TTask>) => {
