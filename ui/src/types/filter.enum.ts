@@ -3,3 +3,8 @@ export enum EFIlterValue {
   NOT_COMPLETE = "false",
   COMPLETED = "true",
 }
+
+export enum ESortOrder {
+  NEWEST = "1",
+  OLDEST = "0",
+}

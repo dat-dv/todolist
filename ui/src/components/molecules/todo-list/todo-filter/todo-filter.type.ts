@@ -1,8 +1,8 @@
-import type { EFIlterValue } from "../../../../types/filter.enum";
+import type { TFilterTask } from "../todo-item.type";
 
 export type TTodoFilterProps = {
-  filter: EFIlterValue;
-  onFilterChange: (value: EFIlterValue) => void;
+  filter: TFilterTask;
+  onFilterChange: (value: Partial<TFilterTask>) => void;
   totalCount: number;
   activeCount: number;
   completedCount: number;

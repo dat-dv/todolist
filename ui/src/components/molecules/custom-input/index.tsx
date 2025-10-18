@@ -11,7 +11,9 @@ const CustomInput = forwardRef<HTMLInputElement, TCustomInputProps>(
         {!!label && (
           <label
             htmlFor={id}
-            className={`font-medium ${error ? "text-red-500" : "text-black"}`}
+            className={`block text-sm font-medium text-gray-700 mb-2 ${
+              error ? "text-red-500" : "text-black"
+            }`}
           >
             {label}
           </label>

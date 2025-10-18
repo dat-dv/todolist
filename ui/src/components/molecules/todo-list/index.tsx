@@ -14,7 +14,8 @@ import {
   PAGINATION_SIZE_OPTIONS,
 } from "../../../configs/pagination.config";
 import TodoFilter from "./todo-filter";
-import { EFIlterValue } from "../../../types/filter.enum";
+import { EFIlterValue, ESortOrder } from "../../../types/filter.enum";
+import type { TFilterTask } from "./todo-item.type";
 
 const TodoList = () => {
   const [idTaskEdited, setTaskIdEdited] = useState<number | undefined>(
@@ -28,10 +29,12 @@ const TodoList = () => {
     todoTitle: null,
   });
 
-  const [query, setQuery] = useState({
+  const [filters, setFilters] = useState<TFilterTask>({
     page: PAGINATION.DEFAULT_PAGE,
     pageSize: PAGINATION.DEFAULT_PAGE_SIZE,
     isCompleted: EFIlterValue.ALL,
+    search: "",
+    sortOrder: ESortOrder.NEWEST,
   });
 
   const { trigger: trigerCreatTask, isMutating: isCreating } = useCreateTask({
@@ -50,9 +53,11 @@ const TodoList = () => {
   const { data: tasskRes, mutate: revalidateTasks } = useGetTasks({
     shouldFetch: true,
     params: {
-      page: query.page,
-      pageSize: query.pageSize,
-      isCompleted: query.isCompleted,
+      page: filters.page,
+      pageSize: filters.pageSize,
+      isCompleted: filters.isCompleted,
+      search: filters.search,
+      sortOrder: filters.sortOrder,
     },
   });
 
@@ -147,15 +152,15 @@ const TodoList = () => {
   };
 
   const handleChangePage = (page: number) => {
-    setQuery({ ...query, page });
+    setFilters({ ...filters, page });
   };
 
   const handleChangePageSize = (pageSize: number) => {
-    setQuery({ ...query, pageSize });
+    setFilters({ ...filters, pageSize });
   };
 
-  const handleChangeFilter = (isCompleted: EFIlterValue) => {
-    setQuery({ ...query, isCompleted });
+  const handleChangeFilter = (data: Partial<TFilterTask>) => {
+    setFilters({ ...filters, ...data });
   };
 
   const totalCount = todos.length;
@@ -165,7 +170,7 @@ const TodoList = () => {
   return (
     <div>
       <TodoFilter
-        filter={query.isCompleted}
+        filter={filters}
         onFilterChange={handleChangeFilter}
         totalCount={totalCount}
         activeCount={activeCount}
@@ -181,7 +186,7 @@ const TodoList = () => {
       </div>
       <div className="md:max-w-[60%] max-w-full mx-auto">
         {todos?.map((todo, index) => {
-          const todoIndex = (query.page - 1) * query.pageSize + index + 1;
+          const todoIndex = (filters.page - 1) * filters.pageSize + index + 1;
           return (
             <TodoItem
               className="mb-4"
@@ -197,12 +202,12 @@ const TodoList = () => {
         })}
       </div>
       <Pagination
-        currentPage={query.page}
+        currentPage={filters.page}
         totalPages={totalPages}
         onPageChange={handleChangePage}
         hasNext={hasNextPage}
         hasPrev={hasPreviousPage}
-        pageSize={query.pageSize}
+        pageSize={filters.pageSize}
         onChangePageSize={handleChangePageSize}
         selectProps={{
           options: PAGINATION_SIZE_OPTIONS,

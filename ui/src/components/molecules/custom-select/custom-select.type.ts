@@ -11,4 +11,5 @@ export type TCustomSelectProps<T extends string | number = string | number> = {
   label?: string;
   className?: string;
   disabled?: boolean;
+  variant?: "horizontal" | "vertical";
 };
