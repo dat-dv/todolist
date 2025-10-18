@@ -41,7 +41,6 @@ const LoginForm = () => {
       router.push(PATHS.HOME);
     } else {
       removeAccessToken();
-      toast.error(res?.error?.message || "Login failed");
     }
   };
 

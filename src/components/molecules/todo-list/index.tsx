@@ -51,7 +51,6 @@ const TodoList = () => {
     const res = await trigerCreatTask(task);
     const isSuccess = res.status === "success";
     if (!isSuccess) {
-      console.log(111, res.error);
       toast.error("Failed to create todo");
       return;
     }
@@ -122,10 +121,10 @@ const TodoList = () => {
           isSubmitting={isSubmitting}
         />
       </div>
-      <div className="mx-auto">
+      <div className="md:max-w-[60%] max-w-full mx-auto">
         {todos?.map((todo) => (
           <TodoItem
-            className="mb-4 "
+            className="mb-4"
             key={todo.id}
             onRemove={handleRemoveTodo}
             todo={todo}

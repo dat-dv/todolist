@@ -1,3 +1,4 @@
+import type { ComponentPropsWithoutRef } from "react";
 import type { TTask } from "../../../../types/entities/task.entity";
 
 export type TTodoItemProps = {
@@ -6,4 +7,4 @@ export type TTodoItemProps = {
   onToggle: (id: number, isCompleted: boolean) => void;
   handleClickEdit: (id?: number) => void;
   idTaskEdited?: number | null;
-} & Omit<React.HTMLAttributes<HTMLLIElement>, "onToggle">;
+} & Omit<ComponentPropsWithoutRef<"div">, "onToggle">;

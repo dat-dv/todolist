@@ -22,19 +22,20 @@ const TodoItem: React.FC<TTodoItemProps> = ({
   if (!todo?.id) return null;
 
   return (
-    <li
+    <div
       className={`
-        flex flex-col sm:flex-row 
-        items-start sm:items-center 
+        flex flex-row 
+        items-start
         gap-3 sm:gap-4 
         px-4 py-3
         transition-all duration-200 
         hover:shadow-md
+        w-full
         ${className}
       `}
       {...rest}
     >
-      <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+      <div className="flex items-start gap-2 sm:gap-3 flex-shrink-0 pt-0.5 sm:flex-row flex-col">
         <ButtonWrapper
           onClick={() => onRemove(todo?.id)}
           disabled={disabled}
@@ -60,16 +61,21 @@ const TodoItem: React.FC<TTodoItemProps> = ({
 
       <div
         className={`
-          flex-1 min-w-0 font-mono 
+          flex-1 
+          min-w-0
+          max-w-full
+          font-mono 
           text-sm sm:text-base md:text-lg 
-          leading-snug sm:leading-normal
+          leading-relaxed
           ${isCompleted ? "line-through text-gray-400" : "text-gray-900"}
         `}
       >
-        <div className="break-words overflow-hidden">{todo?.title}</div>
+        <div className="break-words whitespace-pre-wrap overflow-wrap-anywhere">
+          {todo?.title}
+        </div>
       </div>
 
-      <div className="flex items-center gap-2 sm:ml-auto mt-2 sm:mt-0">
+      <div className="flex items-start flex-shrink-0 pt-0.5">
         {isEditing ? (
           <ButtonWrapper
             onClick={() => handleClickEdit(undefined)}
@@ -89,7 +95,7 @@ const TodoItem: React.FC<TTodoItemProps> = ({
           </ButtonWrapper>
         )}
       </div>
-    </li>
+    </div>
   );
 };
 

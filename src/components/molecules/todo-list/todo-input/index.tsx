@@ -43,10 +43,22 @@ const TodoInput: React.FC<TTodoInputProps> = ({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-full flex items-center gap-4 mb-8"
-      style={{ maxWidth }}
+      className="
+        w-full 
+        max-w-full
+        flex items-center 
+        gap-2 xs:gap-3 sm:gap-4 
+        mb-4 xs:mb-6 sm:mb-8
+      "
+      style={{
+        maxWidth:
+          typeof window !== "undefined" && window.innerWidth >= 640
+            ? maxWidth
+            : "100%",
+        boxSizing: "border-box",
+      }}
     >
-      <div className="relative flex-1">
+      <div className="relative flex-1 min-w-0">
         <CustomInput
           id="task"
           placeholder={placeholder}
@@ -57,12 +69,18 @@ const TodoInput: React.FC<TTodoInputProps> = ({
 
       <CustomButton
         type="submit"
-        className="flex gap-1 px-2 py-2"
+        className="
+          flex items-center justify-center gap-1 
+          px-2 xs:px-3 sm:px-4 
+          py-2 
+          flex-shrink-0
+          text-xs xs:text-sm sm:text-base
+        "
         disabled={disabled}
         isLoading={isSubmitting}
       >
-        {isEdited ? "Edit" : "Add"}
-        <PlusIcon />
+        <span className="hidden xs:inline">{isEdited ? "Edit" : "Add"}</span>
+        <PlusIcon className="w-4 h-4 xs:w-5 xs:h-5" />
       </CustomButton>
     </form>
   );
