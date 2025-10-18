@@ -69,7 +69,7 @@ const TodoInput: React.FC<TTodoInputProps> = ({
         disabled={disabled}
         isLoading={isSubmitting}
       >
-        <span className="hidden xs:inline">{isEdited ? "Edit" : "Add"}</span>
+        <span>{isEdited ? "Edit" : "Add"}</span>
         <PlusIcon className="w-4 h-4 xs:w-5 xs:h-5" />
       </CustomButton>
     </form>
