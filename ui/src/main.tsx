@@ -4,6 +4,7 @@ import { StrictMode } from "react";
 import { RouterProvider } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { router } from "./routes";
+import ErrorBoundary from "./components/molecules/error-boundary";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -11,8 +12,10 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <StrictMode>
-    <HelmetProvider>
-      <RouterProvider router={router} />
-    </HelmetProvider>
+    <ErrorBoundary>
+      <HelmetProvider>
+        <RouterProvider router={router} />
+      </HelmetProvider>
+    </ErrorBoundary>
   </StrictMode>
 );
