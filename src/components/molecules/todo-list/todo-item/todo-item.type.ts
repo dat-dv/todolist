@@ -7,4 +7,5 @@ export type TTodoItemProps = {
   onToggle: (id: number, isCompleted: boolean) => void;
   handleClickEdit: (id?: number) => void;
   idTaskEdited?: number | null;
+  title?: string;
 } & Omit<ComponentPropsWithoutRef<"div">, "onToggle">;

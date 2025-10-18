@@ -13,6 +13,7 @@ const TodoItem: React.FC<TTodoItemProps> = ({
   handleClickEdit,
   idTaskEdited,
   className,
+  title,
   ...rest
 }) => {
   const isCompleted = !!todo?.isCompleted;
@@ -71,7 +72,7 @@ const TodoItem: React.FC<TTodoItemProps> = ({
         `}
       >
         <div className="break-words whitespace-pre-wrap overflow-wrap-anywhere">
-          {todo?.title}
+          {title}
         </div>
       </div>
 

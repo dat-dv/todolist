@@ -48,7 +48,7 @@ const TodoList = () => {
     shouldFetch: true,
     params: {
       page: pagination.page,
-      limit: pagination.pageSize,
+      pageSize: pagination.pageSize,
     },
   });
 
@@ -159,17 +159,22 @@ const TodoList = () => {
         />
       </div>
       <div className="md:max-w-[60%] max-w-full mx-auto">
-        {todos?.map((todo) => (
-          <TodoItem
-            className="mb-4"
-            key={todo.id}
-            onClickDelete={handleOpenConfirmDelete}
-            todo={todo}
-            onToggle={handleToggleTodo}
-            handleClickEdit={handleClickEdit}
-            idTaskEdited={idTaskEdited}
-          />
-        ))}
+        {todos?.map((todo, index) => {
+          const todoIndex =
+            (pagination.page - 1) * pagination.pageSize + index + 1;
+          return (
+            <TodoItem
+              className="mb-4"
+              key={todo.id}
+              onClickDelete={handleOpenConfirmDelete}
+              todo={todo}
+              title={`${todoIndex}. ${todo.title}`}
+              onToggle={handleToggleTodo}
+              handleClickEdit={handleClickEdit}
+              idTaskEdited={idTaskEdited}
+            />
+          );
+        })}
       </div>
       <Pagination
         currentPage={pagination.page}
