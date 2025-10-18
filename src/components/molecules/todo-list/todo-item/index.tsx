@@ -4,6 +4,7 @@ import DeleteIcon from "../../../atoms/icons/delete-icon";
 import CheckIcon from "../../../atoms/icons/check-icon";
 import CancelEditIcon from "../../../atoms/icons/cancel-edit-icon";
 import EditIcon from "../../../atoms/icons/edit-icon";
+import ButtonWrapper from "../../../atoms/icons/button-wrapper-icon";
 
 const TodoItem: React.FC<TTodoItemProps> = ({
   todo,
@@ -26,26 +27,27 @@ const TodoItem: React.FC<TTodoItemProps> = ({
       {...rest}
     >
       <div className="flex items-center gap-3 sm:gap-4">
-        <button
-          disabled={disabled}
+        <ButtonWrapper
           onClick={() => onRemove(todo?.id)}
-          aria-label="Delete"
-          className="flex items-center justify-center shrink-0 h-8 w-8 sm:h-9 sm:w-9 rounded-md bg-red-500 hover:bg-red-600 text-white disabled:opacity-50"
+          disabled={disabled}
+          ariaLabel="Delete"
+          className="bg-red-500 hover:bg-red-600 text-white"
         >
           <DeleteIcon />
-        </button>
-        <button
-          disabled={disabled}
+        </ButtonWrapper>
+
+        <ButtonWrapper
           onClick={() => onToggle(todo.id, !isCompleted)}
-          aria-label={todo.isCompleted ? "Mark active" : "Mark completed"}
-          className={`flex items-center justify-center shrink-0 h-8 w-8 sm:h-9 sm:w-9 rounded-md border-2 transition ${
-            todo.isCompleted
+          disabled={disabled}
+          ariaLabel={isCompleted ? "Mark active" : "Mark completed"}
+          className={`border-2 ${
+            isCompleted
               ? "bg-green-600 hover:bg-green-700 border-green-600 text-white"
               : "bg-gray-300 hover:bg-gray-400 border-gray-400 text-gray-600"
           }`}
         >
           {isCompleted && <CheckIcon />}
-        </button>
+        </ButtonWrapper>
       </div>
 
       <div
@@ -60,22 +62,22 @@ const TodoItem: React.FC<TTodoItemProps> = ({
 
       <div className="flex items-center gap-2 ml-auto">
         {isEditing ? (
-          <button
+          <ButtonWrapper
             onClick={() => handleClickEdit(undefined)}
-            aria-label="Cancel Edit"
-            className="flex items-center justify-center shrink-0 h-8 w-8 sm:h-9 sm:w-9 rounded-md bg-gray-500 hover:bg-gray-600 text-white"
+            ariaLabel="Cancel Edit"
+            className="bg-gray-500 hover:bg-gray-600 text-white"
           >
             <CancelEditIcon />
-          </button>
+          </ButtonWrapper>
         ) : (
-          <button
-            disabled={disabled}
+          <ButtonWrapper
             onClick={() => handleClickEdit(todo.id)}
-            aria-label="Edit"
-            className="flex items-center justify-center shrink-0 h-8 w-8 sm:h-9 sm:w-9 rounded-md bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50"
+            disabled={disabled}
+            ariaLabel="Edit"
+            className="bg-blue-500 hover:bg-blue-600 text-white"
           >
             <EditIcon />
-          </button>
+          </ButtonWrapper>
         )}
       </div>
     </li>
