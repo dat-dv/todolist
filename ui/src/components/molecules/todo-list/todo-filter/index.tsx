@@ -9,6 +9,7 @@ import CustomInput from "../../custom-input";
 import Drawer from "../../drawer";
 import StatsBadge from "../../../atoms/stats-badge.tsx";
 import CustomButton from "../../../atoms/custom-button/index.tsx";
+import { PAGINATION } from "../../../../configs/pagination.config.ts";
 
 const TODO_FILTER_OPTIONS = [
   { value: EFIlterValue.ALL, label: "All" },
@@ -31,7 +32,7 @@ const TodoFilter: React.FC<TTodoFilterProps> = ({
   const debouncedSearch = useDebounce(searchInput, 300);
 
   useEffect(() => {
-    onFilterChange({ search: debouncedSearch });
+    onFilterChange({ search: debouncedSearch, page: PAGINATION.DEFAULT_PAGE });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch]);
 
@@ -40,8 +41,11 @@ const TodoFilter: React.FC<TTodoFilterProps> = ({
   };
 
   const onSortOrderChange = (value: ESortOrder) => {
-    onFilterChange({ sortOrder: value });
+    onFilterChange({ sortOrder: value, page: PAGINATION.DEFAULT_PAGE });
   };
+
+  const handleChangeStatus = (value: EFIlterValue) =>
+    onFilterChange({ isCompleted: value, page: PAGINATION.DEFAULT_PAGE });
 
   return (
     <>
@@ -86,7 +90,7 @@ const TodoFilter: React.FC<TTodoFilterProps> = ({
             label="Filter by Status"
             options={TODO_FILTER_OPTIONS}
             value={filter.isCompleted}
-            onChange={(value) => onFilterChange({ isCompleted: value })}
+            onChange={handleChangeStatus}
             variant="vertical"
           />
 

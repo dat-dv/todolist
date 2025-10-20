@@ -158,7 +158,7 @@ const TodoList = () => {
   };
 
   const handleChangePageSize = (pageSize: number) => {
-    setFilters({ ...filters, pageSize });
+    setFilters({ ...filters, pageSize, page: PAGINATION.DEFAULT_PAGE });
   };
 
   const handleChangeFilter = (data: Partial<TFilterTask>) => {
