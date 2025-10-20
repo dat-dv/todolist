@@ -1,4 +1,4 @@
-name: todolistapi
+name: todolistapp
 
 version: "3.8"
 
@@ -62,9 +62,9 @@ services:
 
 volumes:
   mysql_data:
-    name: todolistapi_mysql_data
+    name: todolistapp_mysql_data
 
 networks:
   todolist_network:
-    name: todolistapi_network
+    name: todolistapp_network
     driver: bridge

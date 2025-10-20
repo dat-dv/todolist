@@ -53,10 +53,10 @@ docker compose down -v
 docker rm -f todolist_mysql todolist_backend todolist_frontend 2>/dev/null
 
 # Remove specific volumes
-docker volume rm todolistapi_mysql_data 2>/dev/null
+docker volume rm todolistapp_mysql_data 2>/dev/null
 
 # Remove specific network
-docker network rm todolistapi_network 2>/dev/null
+docker network rm todolistapp_network 2>/dev/null
 
 # Then rerun step #1
 ```

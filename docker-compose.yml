@@ -1,16 +1,15 @@
-name: todolistapi
+name: todolistapp
 
 version: "3.8"
 
 services:
+  # MySQL Database Service
   mysql:
     image: mysql:8.0
     container_name: todolist_mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
-    ports:
-      - "${DB_PORT:-3306}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -20,6 +19,7 @@ services:
       timeout: 20s
       retries: 10
 
+  # Backend Service
   backend:
     build:
       context: ./api
@@ -37,14 +37,13 @@ services:
       - JWT_AUDIENCE=${JWT_AUDIENCE}
       - JWT_EXPIRATION_HOURS=${JWT_EXPIRATION_HOURS}
       - AUTO_MIGRATE=${AUTO_MIGRATE}
-    ports:
-      - "${BACKEND_PORT:-5000}:8080"
     depends_on:
       mysql:
         condition: service_healthy
     networks:
       - todolist_network
 
+  # Frontend Service (với Nginx tích hợp)
   frontend:
     build:
       context: ./ui
@@ -53,7 +52,7 @@ services:
         - VITE_BE_URL=${VITE_BE_URL}
     container_name: todolist_frontend
     ports:
-      - "${FRONTEND_PORT:-3000}:80"
+      - "5368:80" # Export port ra ngoài
     depends_on:
       - backend
     networks:
@@ -62,9 +61,9 @@ services:
 
 volumes:
   mysql_data:
-    name: todolistapi_mysql_data
+    name: todolistapp_mysql_data
 
 networks:
   todolist_network:
-    name: todolistapi_network
+    name: todolistapp_network
     driver: bridge
