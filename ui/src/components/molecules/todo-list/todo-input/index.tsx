@@ -32,13 +32,15 @@ const TodoInput: React.FC<TTodoInputProps> = ({
     }
   }, [reset, task]);
 
-  const onSubmit = (data: TTodoInputData) => {
+  const onSubmit = async (data: TTodoInputData) => {
     const isEdit = !!task?.id;
-    onAdd({
+    const isSubmitSucces = await onAdd({
       ...(isEdit ? task || {} : {}),
       title: data.task,
     });
-    reset({ task: "" });
+    if (isSubmitSucces) {
+      reset({ task: "" });
+    }
   };
 
   const isDisableSubmit = disabled || isSubmitting || !isDirty || !isValid;

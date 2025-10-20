@@ -78,10 +78,11 @@ const TodoList = () => {
     const isSuccess = res.status === "success";
     if (!isSuccess) {
       toast.error("Failed to create todo");
-      return;
+      return false;
     }
     toast.success("Todo created successfully");
     revalidateTasks();
+    return true;
   };
 
   const handleEditTask = async (task: Partial<TTask>) => {
@@ -90,22 +91,24 @@ const TodoList = () => {
       extendUrl: `/${task.id}`,
     });
     const isSuccess = res.status === "success";
-    if (!isSuccess) {
-      toast.error("Failed to update todo");
-      return;
+    if (isSuccess) {
+      toast.success("Todo updated successfully");
+      revalidateTasks();
+      setTaskIdEdited(undefined);
+      return true;
     }
-    toast.success("Todo updated successfully");
-    revalidateTasks();
-    setTaskIdEdited(undefined);
+
+    toast.error("Failed to update todo");
+    return false;
   };
 
   const handleSubmitTodo = async (task: Partial<TTask>) => {
     const isEdit = !!task?.id;
 
     if (isEdit) {
-      handleEditTask(task);
+      return handleEditTask(task);
     } else {
-      handleAddTodo(task);
+      return handleAddTodo(task);
     }
   };
 
