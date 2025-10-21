@@ -43,7 +43,7 @@ services:
     networks:
       - todolist_network
 
-  # Frontend Service (với Nginx tích hợp)
+  # FE Service + Nginx
   frontend:
     build:
       context: ./ui
@@ -52,7 +52,7 @@ services:
         - VITE_BE_URL=${VITE_BE_URL}
     container_name: todolist_frontend
     ports:
-      - "5368:80" # Export port ra ngoài
+      - "${FRONTEND_PORT:-5367}:80"
     depends_on:
       backend:
         condition: service_started
