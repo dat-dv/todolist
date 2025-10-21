@@ -1,25 +1,27 @@
-# Build stage
-FROM node:20-alpine AS build
+# Build stage for Vite application
+FROM node:20-alpine AS build-stage
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci
+COPY package.json package-lock.json ./
+RUN npm ci --only=production
 
 COPY . .
+
 RUN npm run build
 
-# Production stage
-FROM nginx:alpine
+# Nginx stage to serve the static build
+FROM nginx:alpine AS production-stage
 
-# Copy built files to nginx's default directory
-COPY --from=build /app/dist /usr/share/nginx/html
+RUN rm /etc/nginx/nginx.conf
 
-# Copy custom nginx config
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY ./nginx.conf /etc/nginx/nginx.conf
 
-# Expose port 80
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+
 EXPOSE 80
 
-# Start nginx
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://localhost/ || exit 1
+
 CMD ["nginx", "-g", "daemon off;"]

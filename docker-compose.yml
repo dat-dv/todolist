@@ -54,7 +54,10 @@ services:
     ports:
       - "5368:80" # Export port ra ngoài
     depends_on:
-      - backend
+      backend:
+        condition: service_started
+      mysql:
+        condition: service_healthy
     networks:
       - todolist_network
     restart: unless-stopped

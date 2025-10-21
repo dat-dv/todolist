@@ -3,12 +3,23 @@ using System.Text.Json;
 using TodoListApi.Common.Filters;
 using TodoListApi.Extensions;
 using TodoListApi.Filters;
+using Microsoft.AspNetCore.HttpOverrides;
 
 // Load .env file
 DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor |
+        ForwardedHeaders.XForwardedProto |
+        ForwardedHeaders.XForwardedHost;
+
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
 // Add services
 builder.Services.AddControllers(options =>
 {
@@ -39,5 +50,6 @@ var app = builder.Build();
 app.AutoMigration();
 // Configure pipeline
 app.ConfigurePipeline();
+
 
 app.Run();

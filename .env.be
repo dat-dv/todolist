@@ -1,4 +1,4 @@
-# ===== be ==== 
+# ===== Backend ====
 ASPNETCORE_ENVIRONMENT=Production # or Development
 
 BACKEND_PORT=5366
@@ -7,12 +7,11 @@ JWT_ISSUER=todolistapi
 JWT_AUDIENCE=todolistapi_users
 JWT_EXPIRATION_HOURS=24
 
-# Mysql
-DB_SERVER=localhost
-DB_PORT=2000
+DB_SERVER=mysql # mysql container name | localhost for debug with mysql
+DB_PORT=3306 # 3306 same container network | 3333 for dbug with mysql (debugger conflict port)
 DB_NAME=todolistdb
 DB_USER=root
 DB_PASSWORD=1gxVHbFADLlextz5
 
 # Migration control
-AUTO_MIGRATE=true  # Set to true only when deploying new version
+AUTO_MIGRATE=true
